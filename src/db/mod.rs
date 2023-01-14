@@ -29,8 +29,9 @@ pub fn add_todo(task: Task) -> Option<Task> {
     .ok()?;
 
     let mut statement = db.prepare("SELECT * FROM tasks WHERE id = ?1").ok()?;
-    let query = statement.query_row([db.last_insert_rowid()], |row| Ok(Task::from_db(row)));
-    query.unwrap()
+    statement
+        .query_row([db.last_insert_rowid()], |row| Ok(Task::from_db(row)))
+        .ok()?
 }
 
 pub fn remove_todo(task: Task) -> Option<Task> {
