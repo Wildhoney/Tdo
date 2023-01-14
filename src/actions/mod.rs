@@ -1,5 +1,5 @@
 use crate::{
-    db::{add_todo, list_todos, remove_todo},
+    db::{add_todo, get_todo_by_id, get_todos, remove_todo},
     types::Task,
 };
 
@@ -14,15 +14,10 @@ pub fn add(description: &str) -> Option<Task> {
 }
 
 pub fn remove(id: usize) -> Option<Task> {
-    let task = Task {
-        id: Some(id),
-        description: "".to_string(),
-        completed: false,
-    };
-
+    let task = get_todo_by_id(id)?;
     remove_todo(task)
 }
 
 pub fn list() -> Option<Vec<Task>> {
-    list_todos()
+    get_todos()
 }

@@ -50,7 +50,7 @@ pub fn remove_todo(task: Task) -> Option<Task> {
     Some(task)
 }
 
-pub fn list_todos() -> Option<Vec<Task>> {
+pub fn get_todos() -> Option<Vec<Task>> {
     let db = get_db_connection()?;
 
     let mut statement = db.prepare("SELECT * FROM tasks").ok()?;
@@ -66,4 +66,9 @@ pub fn list_todos() -> Option<Vec<Task>> {
         .ok()?;
 
     Some(query.map(|task| task.unwrap()).collect::<Vec<_>>())
+}
+
+pub fn get_todo_by_id(id: usize) -> Option<Task> {
+    let tasks = list_todos().unwrap_or(vec![]);
+    tasks.into_iter().find(|task| task.id == Some(id))
 }
