@@ -1,7 +1,7 @@
 #[derive(Debug, PartialEq)]
 pub enum Output {
     Add(Option<Task>),
-    Remove,
+    Remove(Option<Task>),
     List,
     Unactionable,
 }

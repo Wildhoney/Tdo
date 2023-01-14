@@ -1,4 +1,7 @@
-use crate::{db::write_todo, types::Task};
+use crate::{
+    db::{add_todo, remove_todo},
+    types::Task,
+};
 
 pub fn add(description: &str) -> Option<Task> {
     let task = Task {
@@ -7,5 +10,15 @@ pub fn add(description: &str) -> Option<Task> {
         completed: false,
     };
 
-    write_todo(task)
+    add_todo(task)
+}
+
+pub fn remove(id: usize) -> Option<Task> {
+    let task = Task {
+        id: Some(id),
+        description: "".to_string(),
+        completed: false,
+    };
+
+    remove_todo(task)
 }
