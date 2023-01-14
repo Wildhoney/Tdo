@@ -2,7 +2,7 @@
 pub enum Output {
     Add(Option<Task>),
     Remove(Option<Task>),
-    List,
+    List(Option<Vec<Task>>),
     Unactionable,
 }
 

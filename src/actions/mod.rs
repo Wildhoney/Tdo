@@ -1,5 +1,5 @@
 use crate::{
-    db::{add_todo, remove_todo},
+    db::{add_todo, list_todos, remove_todo},
     types::Task,
 };
 
@@ -21,4 +21,8 @@ pub fn remove(id: usize) -> Option<Task> {
     };
 
     remove_todo(task)
+}
+
+pub fn list() -> Option<Vec<Task>> {
+    list_todos()
 }

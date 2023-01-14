@@ -27,17 +27,15 @@ pub fn add_todo(task: Task) -> Option<Task> {
         .prepare("SELECT * FROM tasks WHERE id = ?1")
         .ok()?;
 
-    let mut tasks = statement
-        .query_map([connection.last_insert_rowid()], |row| {
-            Ok(Task {
-                id: Some(row.get(0)?),
-                description: row.get(1)?,
-                completed: row.get(2)?,
-            })
+    let query = statement.query_row([connection.last_insert_rowid()], |row| {
+        Ok(Task {
+            id: Some(row.get(0)?),
+            description: row.get(1)?,
+            completed: row.get(2)?,
         })
-        .ok()?;
+    });
 
-    tasks.next().unwrap().ok()
+    Some(query.unwrap())
 }
 
 pub fn remove_todo(task: Task) -> Option<Task> {
@@ -48,4 +46,22 @@ pub fn remove_todo(task: Task) -> Option<Task> {
         .ok()?;
 
     Some(task)
+}
+
+pub fn list_todos() -> Option<Vec<Task>> {
+    let connection = Connection::open("tdo.db").unwrap();
+
+    let mut statement = connection.prepare("SELECT * FROM tasks").ok()?;
+
+    let query = statement
+        .query_map([], |row| {
+            Ok(Task {
+                id: Some(row.get(0)?),
+                description: row.get(1)?,
+                completed: row.get(2)?,
+            })
+        })
+        .ok()?;
+
+    Some(query.map(|task| task.unwrap()).collect::<Vec<_>>())
 }

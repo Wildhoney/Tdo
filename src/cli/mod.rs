@@ -1,7 +1,7 @@
 use clap::{arg, Command};
 
 use crate::{
-    actions::{add, remove},
+    actions::{add, list, remove},
     types::Output,
 };
 
@@ -23,7 +23,7 @@ pub fn run() -> Output {
                 .unwrap();
             Output::Remove(remove(id))
         }
-        Some((CMD_LIST, _)) => Output::List,
+        Some((CMD_LIST, _)) => Output::List(list()),
         None | Some((_, _)) => Output::Unactionable,
     }
 }
