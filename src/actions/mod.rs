@@ -1,4 +1,4 @@
-use crate::{types::Task, utils::write_todo};
+use crate::{db::write_todo, types::Task};
 
 pub fn add(description: &str) -> Option<Task> {
     let task = Task {
