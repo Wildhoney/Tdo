@@ -23,11 +23,13 @@ fn put_header() -> () {
 }
 
 fn put_add_task(task: Task) -> () {
-    println!("Added: {:?}", task)
+    let Symbols { bullet, .. } = get_symbols();
+    println!("{bullet} Added: {}", task.description)
 }
 
 fn put_task_remove(task: Task) -> () {
-    println!("Removed: {:?}", task)
+    let Symbols { bullet, .. } = get_symbols();
+    println!("{bullet} Removed: {}", task.description)
 }
 
 fn put_tasks_list(tasks: Vec<Task>) -> () {
