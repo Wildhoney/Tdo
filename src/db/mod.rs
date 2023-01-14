@@ -8,9 +8,10 @@ fn get_db_connection() -> Option<Connection> {
     connection
         .execute(
             "CREATE TABLE IF NOT EXISTS tasks (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            description TEXT NOT NULL,
-            completed   BOOL NOT NULL
+            id            INTEGER PRIMARY KEY AUTOINCREMENT,
+            description   TEXT NOT NULL,
+            completed     BOOL NOT NULL,
+            date_modified DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
             (),
         )
