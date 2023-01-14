@@ -4,12 +4,7 @@ use crate::{
 };
 
 pub fn add(description: &str) -> Option<Task> {
-    let task = Task {
-        id: None,
-        description: description.to_string(),
-        completed: false,
-    };
-
+    let task = Task::new(description.to_string());
     add_todo(task)
 }
 

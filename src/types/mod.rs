@@ -1,3 +1,5 @@
+use rusqlite::Row;
+
 #[derive(Debug, PartialEq)]
 pub enum Output {
     Add(Option<Task>),
@@ -11,4 +13,22 @@ pub struct Task {
     pub id: Option<usize>,
     pub description: String,
     pub completed: bool,
+}
+
+impl Task {
+    pub fn new(description: String) -> Self {
+        Self {
+            id: None,
+            description,
+            completed: false,
+        }
+    }
+
+    pub fn from_db(row: &Row) -> Option<Self> {
+        Some(Self {
+            id: row.get(0).ok()?,
+            description: row.get(1).ok()?,
+            completed: row.get(2).ok()?,
+        })
+    }
 }
