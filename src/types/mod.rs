@@ -18,6 +18,7 @@ pub struct Task {
     pub id: Option<usize>,
     pub description: String,
     pub completed: bool,
+    pub date_modified: Option<String>,
 }
 
 impl Task {
@@ -26,6 +27,7 @@ impl Task {
             id: None,
             description,
             completed: false,
+            date_modified: None,
         }
     }
 
@@ -34,6 +36,7 @@ impl Task {
             id: row.get(0).ok()?,
             description: row.get(1).ok()?,
             completed: row.get(2).ok()?,
+            date_modified: row.get(3).ok()?,
         })
     }
 }
