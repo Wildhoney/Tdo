@@ -2,7 +2,7 @@ use rusqlite::Connection;
 
 use crate::types::Task;
 
-pub fn write_todo(task: Task) -> Option<Task> {
+pub fn add_todo(task: Task) -> Option<Task> {
     let connection = Connection::open("tdo.db").unwrap();
 
     connection
@@ -38,4 +38,14 @@ pub fn write_todo(task: Task) -> Option<Task> {
         .ok()?;
 
     tasks.next().unwrap().ok()
+}
+
+pub fn remove_todo(task: Task) -> Option<Task> {
+    let connection = Connection::open("tdo.db").unwrap();
+
+    connection
+        .execute("DELETE FROM tasks WHERE id = ?1", [&task.id.unwrap_or(0)])
+        .ok()?;
+
+    Some(task)
 }

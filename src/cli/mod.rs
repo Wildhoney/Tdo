@@ -1,6 +1,9 @@
 use clap::{arg, Command};
 
-use crate::{actions::add, types::Output};
+use crate::{
+    actions::{add, remove},
+    types::Output,
+};
 
 pub const CMD_ADD: &str = "add";
 pub const CMD_REMOVE: &str = "remove";
@@ -12,7 +15,14 @@ pub fn run() -> Output {
             let description = arg.get_one::<String>("DESCRIPTION").unwrap();
             Output::Add(add(&description))
         }
-        Some((CMD_REMOVE, _)) => Output::Remove,
+        Some((CMD_REMOVE, arg)) => {
+            let id = arg
+                .get_one::<String>("ID")
+                .unwrap()
+                .parse::<usize>()
+                .unwrap();
+            Output::Remove(remove(id))
+        }
         Some((CMD_LIST, _)) => Output::List,
         None | Some((_, _)) => Output::Unactionable,
     }
