@@ -45,7 +45,14 @@ pub fn get_todos() -> Option<Vec<Task>> {
     let db = get_db_connection()?;
     let mut statement = db.prepare("SELECT * FROM tasks").ok()?;
     let query = statement.query_map([], |row| Ok(Task::from_db(row))).ok()?;
-    Some(query.map(|task| task.unwrap().unwrap()).collect::<Vec<_>>())
+    let tasks = query
+        .filter_map(|task| Some(task.unwrap()?))
+        .collect::<Vec<_>>();
+
+    match tasks.len() {
+        0 => None,
+        _ => Some(tasks),
+    }
 }
 
 pub fn get_todo_by_id(id: usize) -> Option<Task> {
