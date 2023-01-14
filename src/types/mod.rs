@@ -8,6 +8,11 @@ pub enum Output {
     Unactionable,
 }
 
+pub struct Symbols {
+    pub dot: String,
+    pub bullet: String,
+}
+
 #[derive(Debug, PartialEq)]
 pub struct Task {
     pub id: Option<usize>,
