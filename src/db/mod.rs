@@ -2,8 +2,8 @@ use rusqlite::Connection;
 
 use crate::types::Task;
 
-pub fn add_todo(task: Task) -> Option<Task> {
-    let connection = Connection::open("tdo.db").unwrap();
+fn get_db_connection() -> Option<Connection> {
+    let connection = Connection::open("tdo.db").ok()?;
 
     connection
         .execute(
@@ -16,18 +16,21 @@ pub fn add_todo(task: Task) -> Option<Task> {
         )
         .ok()?;
 
-    connection
-        .execute(
-            "INSERT INTO tasks (description, completed) VALUES (?1, ?2)",
-            (&task.description, &task.completed),
-        )
-        .ok()?;
+    Some(connection)
+}
 
-    let mut statement = connection
-        .prepare("SELECT * FROM tasks WHERE id = ?1")
-        .ok()?;
+pub fn add_todo(task: Task) -> Option<Task> {
+    let db = get_db_connection()?;
 
-    let query = statement.query_row([connection.last_insert_rowid()], |row| {
+    db.execute(
+        "INSERT INTO tasks (description, completed) VALUES (?1, ?2)",
+        (&task.description, &task.completed),
+    )
+    .ok()?;
+
+    let mut statement = db.prepare("SELECT * FROM tasks WHERE id = ?1").ok()?;
+
+    let query = statement.query_row([db.last_insert_rowid()], |row| {
         Ok(Task {
             id: Some(row.get(0)?),
             description: row.get(1)?,
@@ -39,19 +42,18 @@ pub fn add_todo(task: Task) -> Option<Task> {
 }
 
 pub fn remove_todo(task: Task) -> Option<Task> {
-    let connection = Connection::open("tdo.db").unwrap();
+    let db = get_db_connection()?;
 
-    connection
-        .execute("DELETE FROM tasks WHERE id = ?1", [&task.id.unwrap_or(0)])
+    db.execute("DELETE FROM tasks WHERE id = ?1", [&task.id.unwrap_or(0)])
         .ok()?;
 
     Some(task)
 }
 
 pub fn list_todos() -> Option<Vec<Task>> {
-    let connection = Connection::open("tdo.db").unwrap();
+    let db = get_db_connection()?;
 
-    let mut statement = connection.prepare("SELECT * FROM tasks").ok()?;
+    let mut statement = db.prepare("SELECT * FROM tasks").ok()?;
 
     let query = statement
         .query_map([], |row| {
