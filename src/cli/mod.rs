@@ -1,6 +1,6 @@
 use clap::{arg, Command};
 
-use crate::types::Output;
+use crate::{actions::add, types::Output};
 
 pub const CMD_ADD: &str = "add";
 pub const CMD_REMOVE: &str = "remove";
@@ -8,7 +8,10 @@ pub const CMD_LIST: &str = "list";
 
 pub fn run() -> Output {
     match get_args().get_matches().subcommand() {
-        Some((CMD_ADD, _)) => Output::Add,
+        Some((CMD_ADD, arg)) => {
+            let description = arg.get_one::<String>("DESCRIPTION").unwrap();
+            Output::Add(add(&description))
+        }
         Some((CMD_REMOVE, _)) => Output::Remove,
         Some((CMD_LIST, _)) => Output::List,
         None | Some((_, _)) => Output::Unactionable,
