@@ -22,6 +22,7 @@ pub struct Task {
     pub description: String,
     pub completed: bool,
     pub date_added: Option<NaiveDateTime>,
+    pub date_modified: Option<NaiveDateTime>,
 }
 
 impl Task {
@@ -31,13 +32,19 @@ impl Task {
             description,
             completed: false,
             date_added: None,
+            date_modified: None,
         }
     }
 
     pub fn from_db(row: &Row) -> Option<Self> {
         let description = row.get(1).ok().unwrap_or("".to_string());
         let completed = row.get(2).ok().unwrap_or(false);
+
         let date_added: Option<NaiveDateTime> = (row.get(3).ok() as Option<String>)
+            .map(|date| NaiveDateTime::parse_from_str(&date, "%Y-%m-%d %H:%M:%S").ok())
+            .unwrap_or(None);
+
+        let date_modified: Option<NaiveDateTime> = (row.get(4).ok() as Option<String>)
             .map(|date| NaiveDateTime::parse_from_str(&date, "%Y-%m-%d %H:%M:%S").ok())
             .unwrap_or(None);
 
@@ -46,6 +53,7 @@ impl Task {
             description,
             completed,
             date_added,
+            date_modified,
         })
     }
 }
