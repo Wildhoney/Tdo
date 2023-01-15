@@ -68,10 +68,19 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
         println!("{icon} {id} {}", task.description);
 
         if let Some(date_added) = task.date_added {
-            println!(
+            print!(
                 "{}",
                 format!("     Added {} ago", get_elapsed_time(date_added)).dimmed()
             );
+
+            if let Some(date_modified) = task.date_modified {
+                print!(
+                    "{}",
+                    format!(" (edited {} ago)", get_elapsed_time(date_modified)).dimmed()
+                );
+            }
+
+            print!("\n");
         }
 
         print!("\n");
