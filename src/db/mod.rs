@@ -2,8 +2,10 @@ use rusqlite::Connection;
 
 use crate::types::Task;
 
+pub const DB_FILENAME: &str = "tdo.db";
+
 fn get_db_connection() -> Option<Connection> {
-    let connection = Connection::open("tdo.db").ok()?;
+    let connection = Connection::open(DB_FILENAME).ok()?;
 
     connection
         .execute(
