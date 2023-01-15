@@ -1,5 +1,6 @@
 use crate::types::Symbols;
 
+use chrono::{NaiveDateTime, Utc};
 use colored::*;
 
 pub fn get_symbols() -> Symbols {
@@ -28,4 +29,26 @@ pub fn get_percentage_emoji(completed_percentage: f64) -> String {
     }
 
     return "🥳".to_string();
+}
+
+pub fn get_time_elapsed(date_modified: NaiveDateTime) -> String {
+    let now = Utc::now().naive_local();
+    let difference = now - date_modified;
+
+    let (suffix, value) = match (
+        difference.num_days(),
+        difference.num_hours(),
+        difference.num_minutes(),
+    ) {
+        (_, 0, minutes @ 1) => ("minute", minutes),
+        (_, 0, minutes) => ("minutes", minutes),
+
+        (days @ 1, 24, _) => ("day", days),
+        (days, 24, _) => ("days", days),
+
+        (_, hours @ 1, _) => ("hour", hours),
+        (_, hours, _) => ("hours", hours),
+    };
+
+    return format!("{value} {suffix}");
 }
