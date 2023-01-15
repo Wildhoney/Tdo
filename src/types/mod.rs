@@ -35,13 +35,17 @@ impl Task {
     }
 
     pub fn from_db(row: &Row) -> Option<Self> {
-        let date_added: String = row.get(3).ok()?;
+        let description = row.get(1).ok().unwrap_or("".to_string());
+        let completed = row.get(2).ok().unwrap_or(false);
+        let date_added: Option<NaiveDateTime> = (row.get(3).ok() as Option<String>)
+            .map(|date| NaiveDateTime::parse_from_str(&date, "%Y-%m-%d %H:%M:%S").ok())
+            .unwrap_or(None);
 
         Some(Self {
-            id: row.get(0).ok()?,
-            description: row.get(1).ok()?,
-            completed: row.get(2).ok()?,
-            date_added: NaiveDateTime::parse_from_str(&date_added, "%Y-%m-%d %H:%M:%S").ok(),
+            id: row.get(0).ok(),
+            description,
+            completed,
+            date_added,
         })
     }
 }
