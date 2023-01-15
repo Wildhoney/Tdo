@@ -40,15 +40,17 @@ pub fn get_time_elapsed(date_modified: NaiveDateTime) -> String {
         difference.num_hours(),
         difference.num_minutes(),
     ) {
-        (_, 0, minutes @ 1) => ("minute", minutes),
-        (_, 0, minutes) => ("minutes", minutes),
-
-        (days @ 1, 24, _) => ("day", days),
-        (days, 24, _) => ("days", days),
-
-        (_, hours @ 1, _) => ("hour", hours),
-        (_, hours, _) => ("hours", hours),
+        (_, 0, minutes) => (get_pluralised("minute", minutes), minutes),
+        (days, 24, _) => (get_pluralised("day", days), days),
+        (_, hours, _) => (get_pluralised("hour", hours), hours),
     };
 
     return format!("{value} {suffix}");
+}
+
+fn get_pluralised(word: &str, count: i64) -> String {
+    match count {
+        1 => word.to_string(),
+        _ => format!("{}s", word),
+    }
 }
