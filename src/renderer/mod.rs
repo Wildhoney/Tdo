@@ -65,7 +65,7 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
             false => bullet,
         };
 
-        println!("{icon} {id} {}", task.description);
+        println!("  {icon} {id} {}", task.description);
 
         if let Some(date_added) = task.date_added {
             print!(
