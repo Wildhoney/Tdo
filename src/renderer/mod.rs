@@ -2,6 +2,7 @@ use crate::{
     types::{Output, Symbols, Task},
     utils::{get_percentage_emoji, get_symbols},
 };
+use chrono::Utc;
 use colored::*;
 use figlet_rs::FIGfont;
 
@@ -56,5 +57,16 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
         let id = format!("{}{dot}", task.id.unwrap_or(0).to_string().dimmed());
 
         println!("{bullet} {id} {}", task.description);
+
+        if let Some(date_modified) = task.date_modified {
+            let now = Utc::now().time();
+            let diff = date_modified.time() - now;
+            println!(
+                "{}",
+                format!("     Updated {} hours ago", diff.num_hours()).dimmed()
+            );
+        }
+
+        print!("\n");
     }
 }

@@ -1,3 +1,4 @@
+use chrono::NaiveDateTime;
 use rusqlite::Row;
 
 #[derive(Debug, PartialEq)]
@@ -18,7 +19,7 @@ pub struct Task {
     pub id: Option<usize>,
     pub description: String,
     pub completed: bool,
-    pub date_modified: Option<String>,
+    pub date_modified: Option<NaiveDateTime>,
 }
 
 impl Task {
@@ -32,11 +33,15 @@ impl Task {
     }
 
     pub fn from_db(row: &Row) -> Option<Self> {
+        let date_modified: String = row.get(3).ok()?;
+        let date_modified: NaiveDateTime =
+            NaiveDateTime::parse_from_str(&date_modified, "%Y-%m-%d %H:%M:%S").ok()?;
+
         Some(Self {
             id: row.get(0).ok()?,
             description: row.get(1).ok()?,
             completed: row.get(2).ok()?,
-            date_modified: row.get(3).ok()?,
+            date_modified: Some(date_modified),
         })
     }
 }
