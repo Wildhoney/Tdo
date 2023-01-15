@@ -14,6 +14,5 @@ pub fn remove(id: usize) -> Option<Task> {
 }
 
 pub fn list() -> Option<Vec<Task>> {
-    println!("{:?}", get_todos());
     get_todos()
 }
