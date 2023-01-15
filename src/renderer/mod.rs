@@ -1,6 +1,6 @@
 use crate::{
     types::{Output, Symbols, Task},
-    utils::{get_percentage_emoji, get_symbols, get_time_elapsed},
+    utils::{get_elapsed_time, get_percentage_emoji, get_symbols},
 };
 use colored::*;
 use figlet_rs::FIGfont;
@@ -67,10 +67,10 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
 
         println!("{icon} {id} {}", task.description);
 
-        if let Some(date_modified) = task.date_modified {
+        if let Some(date_added) = task.date_added {
             println!(
                 "{}",
-                format!("     Updated {} ago", get_time_elapsed(date_modified)).dimmed()
+                format!("     Added {} ago", get_elapsed_time(date_added)).dimmed()
             );
         }
 

@@ -31,18 +31,20 @@ pub fn get_percentage_emoji(completed_percentage: f64) -> String {
     return "🥳".to_string();
 }
 
-pub fn get_time_elapsed(date_modified: NaiveDateTime) -> String {
+pub fn get_elapsed_time(date: NaiveDateTime) -> String {
     let now = Utc::now().naive_utc();
-    let difference = now - date_modified;
+    let difference = now - date;
 
     let (suffix, value) = match (
         difference.num_days(),
         difference.num_hours(),
         difference.num_minutes(),
+        difference.num_seconds(),
     ) {
-        (_, 0, minutes) => (get_pluralised("minute", minutes), minutes),
-        (days, 24, _) => (get_pluralised("day", days), days),
-        (_, hours, _) => (get_pluralised("hour", hours), hours),
+        (_, _, 0, seconds) => (get_pluralised("second", seconds), seconds),
+        (_, 0, minutes, _) => (get_pluralised("minute", minutes), minutes),
+        (days, 24, _, _) => (get_pluralised("day", days), days),
+        (_, hours, _, _) => (get_pluralised("hour", hours), hours),
     };
 
     return format!("{value} {suffix}");
