@@ -59,10 +59,14 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
     );
 
     for task in tasks {
-        let Symbols { dot, bullet } = get_symbols();
+        let Symbols { dot, bullet, tick } = get_symbols();
         let id = format!("{}{dot}", task.id.unwrap_or(0).to_string().dimmed());
+        let icon = match task.completed {
+            true => tick,
+            false => bullet,
+        };
 
-        println!("{bullet} {id} {}", task.description);
+        println!("{icon} {id} {}", task.description);
 
         if let Some(date_modified) = task.date_modified {
             let now = Utc::now().time();

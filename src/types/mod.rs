@@ -13,6 +13,7 @@ pub enum Output {
 pub struct Symbols {
     pub dot: String,
     pub bullet: String,
+    pub tick: String,
 }
 
 #[derive(Debug, PartialEq)]
