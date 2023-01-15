@@ -5,6 +5,7 @@ use rusqlite::Row;
 pub enum Output {
     Add(Option<Task>),
     Remove(Option<Task>),
+    Edit(Option<Task>),
     List(Option<Vec<Task>>),
     Unactionable,
 }

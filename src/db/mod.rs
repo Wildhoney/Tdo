@@ -42,6 +42,20 @@ pub fn remove_todo(task: Task) -> Option<Task> {
     Some(task)
 }
 
+pub fn edit_todo(task: Task) -> Option<Task> {
+    let db = get_db_connection()?;
+    db.execute(
+        "UPDATE tasks SET description = ?1, completed = ?2 WHERE id = ?3",
+        (
+            &task.description,
+            task.completed as i32,
+            &task.id.unwrap_or(0),
+        ),
+    )
+    .ok()?;
+    Some(task)
+}
+
 pub fn get_todos() -> Option<Vec<Task>> {
     let db = get_db_connection()?;
     let mut statement = db.prepare("SELECT * FROM tasks").ok()?;
@@ -58,5 +72,6 @@ pub fn get_todos() -> Option<Vec<Task>> {
 
 pub fn get_todo_by_id(id: usize) -> Option<Task> {
     let tasks = get_todos().unwrap_or(vec![]);
+    println!("{:?}", tasks);
     tasks.into_iter().find(|task| task.id == Some(id))
 }

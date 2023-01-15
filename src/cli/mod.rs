@@ -1,12 +1,13 @@
-use clap::{arg, Command};
+use clap::{arg, Arg, ArgAction, Command};
 
 use crate::{
-    actions::{add, list, remove},
+    actions::{add, edit, list, remove},
     types::Output,
 };
 
 pub const CMD_ADD: &str = "add";
 pub const CMD_REMOVE: &str = "remove";
+pub const CMD_EDIT: &str = "edit";
 pub const CMD_LIST: &str = "list";
 
 pub fn run() -> Output {
@@ -22,6 +23,21 @@ pub fn run() -> Output {
                 .parse::<usize>()
                 .unwrap();
             Output::Remove(remove(id))
+        }
+        Some((CMD_EDIT, arg)) => {
+            let id = arg
+                .get_one::<String>("ID")
+                .unwrap()
+                .parse::<usize>()
+                .unwrap();
+
+            let description = arg.get_one::<String>("description");
+            let completed = match arg.get_one::<String>("completed") {
+                Some(value) => value.parse::<bool>().ok(),
+                _ => None,
+            };
+
+            Output::Edit(edit(id, description, completed))
         }
         Some((CMD_LIST, _)) => Output::List(list()),
         None | Some((_, _)) => Output::Unactionable,
@@ -46,6 +62,25 @@ pub fn get_args() -> Command {
                 .about("Remove a task from your list")
                 .arg(arg!(<ID> "ID of the task that no longer needs to be done today"))
                 .arg_required_else_help(true),
+        )
+        .subcommand(
+            Command::new(CMD_EDIT)
+                .about("Edit a task from within your list")
+                .arg(arg!(<ID> "ID of the task that you're editing"))
+                .arg_required_else_help(true)
+                .arg(
+                    Arg::new("description")
+                        .short('d')
+                        .long("description")
+                        .required(false),
+                )
+                .arg(
+                    Arg::new("completed")
+                        .short('c')
+                        .long("completed")
+                        .required(false)
+                        .action(ArgAction::Set),
+                ),
         )
         .subcommand(
             Command::new(CMD_LIST)
