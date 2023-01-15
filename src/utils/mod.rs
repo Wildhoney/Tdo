@@ -32,7 +32,7 @@ pub fn get_percentage_emoji(completed_percentage: f64) -> String {
 }
 
 pub fn get_time_elapsed(date_modified: NaiveDateTime) -> String {
-    let now = Utc::now().naive_local();
+    let now = Utc::now().naive_utc();
     let difference = now - date_modified;
 
     let (suffix, value) = match (
