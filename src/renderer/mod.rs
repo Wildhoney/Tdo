@@ -12,6 +12,7 @@ pub fn print(output: Output) -> () {
     match output {
         Output::Add(Some(task)) => put_add_task(task),
         Output::Remove(Some(task)) => put_task_remove(task),
+        Output::Edit(Some(task)) => put_task_edit(task),
         Output::List(Some(tasks)) => put_tasks_list(tasks),
         _ => println!("There appears to be a problem."),
     }
@@ -37,6 +38,11 @@ fn put_add_task(task: Task) -> () {
 fn put_task_remove(task: Task) -> () {
     let Symbols { bullet, .. } = get_symbols();
     println!("{bullet} Removed: {}", task.description)
+}
+
+fn put_task_edit(task: Task) -> () {
+    let Symbols { bullet, .. } = get_symbols();
+    println!("{bullet} Edited: {}", task.description)
 }
 
 fn put_tasks_list(tasks: Vec<Task>) -> () {
