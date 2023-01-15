@@ -10,10 +10,11 @@ fn get_db_connection() -> Option<Connection> {
     connection
         .execute(
             "CREATE TABLE IF NOT EXISTS tasks (
-            id            INTEGER PRIMARY KEY AUTOINCREMENT,
-            description   TEXT NOT NULL,
-            completed     BOOL NOT NULL,
-            date_added    DATETIME DEFAULT CURRENT_TIMESTAMP
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            description    TEXT NOT NULL,
+            completed      BOOL NOT NULL,
+            date_added     DATETIME DEFAULT CURRENT_TIMESTAMP,
+            date_modified  DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
             (),
         )
@@ -47,7 +48,7 @@ pub fn remove_todo(task: Task) -> Option<Task> {
 pub fn edit_todo(task: Task) -> Option<Task> {
     let db = get_db_connection()?;
     db.execute(
-        "UPDATE tasks SET description = ?1, completed = ?2 WHERE id = ?3",
+        "UPDATE tasks SET description = ?1, completed = ?2, date_modified = CURRENT_TIMESTAMP WHERE id = ?3",
         (
             &task.description,
             task.completed as i32,
