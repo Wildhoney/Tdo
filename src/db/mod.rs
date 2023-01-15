@@ -72,6 +72,5 @@ pub fn get_todos() -> Option<Vec<Task>> {
 
 pub fn get_todo_by_id(id: usize) -> Option<Task> {
     let tasks = get_todos().unwrap_or(vec![]);
-    println!("{:?}", tasks);
     tasks.into_iter().find(|task| task.id == Some(id))
 }
