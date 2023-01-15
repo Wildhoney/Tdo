@@ -34,14 +34,13 @@ impl Task {
 
     pub fn from_db(row: &Row) -> Option<Self> {
         let date_modified: String = row.get(3).ok()?;
-        let date_modified: NaiveDateTime =
-            NaiveDateTime::parse_from_str(&date_modified, "%Y-%m-%d %H:%M:%S").ok()?;
+        let date_modified = NaiveDateTime::parse_from_str(&date_modified, "%Y-%m-%d %H:%M:%S");
 
         Some(Self {
             id: row.get(0).ok()?,
             description: row.get(1).ok()?,
             completed: row.get(2).ok()?,
-            date_modified: Some(date_modified),
+            date_modified: Some(date_modified.ok()?),
         })
     }
 }
