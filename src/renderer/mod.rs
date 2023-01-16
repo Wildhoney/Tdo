@@ -1,9 +1,13 @@
 use crate::{
+    renderer::utils::{get_elapsed_time, get_percentage_emoji},
     types::{Output, Symbols, Task},
-    utils::{get_elapsed_time, get_percentage_emoji, get_symbols},
 };
 use colored::*;
 use figlet_rs::FIGfont;
+
+use self::utils::get_symbols;
+
+mod utils;
 
 pub fn print(output: Output) -> () {
     put_header();

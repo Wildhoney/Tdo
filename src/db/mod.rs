@@ -1,10 +1,11 @@
 use chrono::{NaiveDateTime, NaiveTime, Utc};
 use rusqlite::Connection;
 
-use crate::{
-    types::{GetTodos, Task},
-    utils::{get_db_connection, prepare_todos},
-};
+mod utils;
+
+use crate::types::{GetTodos, Task};
+
+use self::utils::{get_db_connection, prepare_todos};
 
 pub fn add_todo(db: &Connection, task: Task) -> Option<Task> {
     let db = get_db_connection(db)?;
