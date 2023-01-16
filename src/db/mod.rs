@@ -1,3 +1,4 @@
+use chrono::{NaiveDateTime, NaiveTime, Utc};
 use rusqlite::Connection;
 
 use crate::types::Task;
@@ -60,9 +61,16 @@ pub fn edit_todo(task: Task) -> Option<Task> {
 }
 
 pub fn get_todos() -> Option<Vec<Task>> {
+    let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
+    let today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
+
     let db = get_db_connection()?;
-    let mut statement = db.prepare("SELECT * FROM tasks").ok()?;
-    let query = statement.query_map([], |row| Ok(Task::from_db(row))).ok()?;
+    let mut statement = db
+        .prepare("SELECT * FROM tasks WHERE date_added >= ?1")
+        .ok()?;
+    let query = statement
+        .query_map([today], |row| Ok(Task::from_db(row)))
+        .ok()?;
     let tasks = query
         .filter_map(|task| Some(task.unwrap()?))
         .collect::<Vec<_>>();
