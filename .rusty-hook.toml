@@ -1,6 +1,6 @@
 [hooks]
-pre-commit = "make t"
-pre-push = "make b"
+pre-commit = "make b"
+pre-push = "make t"
 
 [logging]
 verbose = true
