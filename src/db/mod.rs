@@ -1,7 +1,10 @@
 use chrono::{NaiveDateTime, NaiveTime, Utc};
-use rusqlite::{Connection, Params};
+use rusqlite::Connection;
 
-use crate::{types::Task, utils::get_db_connection};
+use crate::{
+    types::{GetTodos, Task},
+    utils::{get_db_connection, prepare_todos},
+};
 
 pub fn add_todo(db: &Connection, task: Task) -> Option<Task> {
     let db = get_db_connection(db)?;
@@ -39,36 +42,19 @@ pub fn edit_todo(db: &Connection, task: Task) -> Option<Task> {
     Some(task)
 }
 
-pub fn get_todays_todos(db: &Connection) -> Option<Vec<Task>> {
-    let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
-    let today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
-    prepare_todos(
-        db,
-        &"SELECT * FROM tasks WHERE date_added >= ?1".to_string(),
-        [today],
-    )
-}
+pub fn get_todos(when: GetTodos, db: &Connection) -> Option<Vec<Task>> {
+    match when {
+        GetTodos::All => prepare_todos(db, &"SELECT * FROM tasks".to_string(), []),
 
-pub fn get_all_todos(db: &Connection) -> Option<Vec<Task>> {
-    prepare_todos(db, &"SELECT * FROM tasks".to_string(), [])
-}
-
-fn prepare_todos<P>(db: &Connection, query: &String, params: P) -> Option<Vec<Task>>
-where
-    P: Params,
-{
-    let db = get_db_connection(db)?;
-    let mut statement = db.prepare(query).ok()?;
-    let query = statement
-        .query_map(params, |row| Ok(Task::from_db(row)))
-        .ok()?;
-    let tasks = query
-        .filter_map(|task| Some(task.unwrap()?))
-        .collect::<Vec<_>>();
-
-    match tasks.len() {
-        0 => None,
-        _ => Some(tasks),
+        GetTodos::Today => {
+            let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
+            let today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
+            prepare_todos(
+                db,
+                &"SELECT * FROM tasks WHERE date_added >= ?1".to_string(),
+                [today],
+            )
+        }
     }
 }
 
@@ -83,8 +69,8 @@ pub fn get_todo(db: &Connection, id: usize) -> Option<Task> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        db::{add_todo, edit_todo, get_todays_todos, remove_todo},
-        types::{DbMemory, Task},
+        db::{add_todo, edit_todo, get_todos, remove_todo},
+        types::{DbMemory, GetTodos, Task},
     };
 
     #[test]
@@ -94,7 +80,7 @@ mod tests {
         let task_from_add = add_todo(&db, Task::new("I am Imogen!".to_string()));
         assert!(task_from_add.is_some());
 
-        let tasks_from_today = get_todays_todos(&db);
+        let tasks_from_today = get_todos(GetTodos::Today, &db);
         assert!(tasks_from_today.is_some());
         assert_eq!(tasks_from_today.unwrap().len(), 1);
 
@@ -107,7 +93,7 @@ mod tests {
         let remove = remove_todo(&db, task_from_add.unwrap());
         assert!(remove.is_some());
 
-        let todays_todos = get_todays_todos(&db);
+        let todays_todos = get_todos(GetTodos::All, &db);
         assert!(todays_todos.is_none());
     }
 }

@@ -72,3 +72,8 @@ impl DbMemory {
         Some(Connection::open_in_memory().ok()?)
     }
 }
+
+pub enum GetTodos {
+    All,
+    Today,
+}
