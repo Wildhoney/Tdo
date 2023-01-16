@@ -81,7 +81,10 @@ pub fn get_todos() -> Option<Vec<Task>> {
     }
 }
 
-pub fn get_todo_by_id(id: usize) -> Option<Task> {
-    let tasks = get_todos().unwrap_or(vec![]);
-    tasks.into_iter().find(|task| task.id == Some(id))
+pub fn get_todo(id: usize) -> Option<Task> {
+    let db = get_db_connection()?;
+    let mut statement = db.prepare("SELECT * FROM tasks WHERE id >= ?1").ok()?;
+    statement
+        .query_row([id], |row| Ok(Task::from_db(row)))
+        .ok()?
 }
