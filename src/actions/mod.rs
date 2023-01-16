@@ -1,5 +1,5 @@
 use crate::{
-    db::{add_todo, edit_todo, get_todo, get_todos, remove_todo},
+    db::{add_todo, edit_todo, get_todays_todos, get_todo, remove_todo},
     types::Task,
 };
 
@@ -21,5 +21,5 @@ pub fn edit(id: usize, description: Option<&String>, completed: Option<bool>) ->
 }
 
 pub fn list() -> Option<Vec<Task>> {
-    get_todos()
+    get_todays_todos()
 }
