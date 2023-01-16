@@ -60,7 +60,7 @@ pub fn edit_todo(task: Task) -> Option<Task> {
     Some(task)
 }
 
-pub fn get_todos() -> Option<Vec<Task>> {
+pub fn get_todays_todos() -> Option<Vec<Task>> {
     let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
     let today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
 
