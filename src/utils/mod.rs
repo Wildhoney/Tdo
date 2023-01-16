@@ -1,8 +1,8 @@
-use crate::types::Symbols;
+use crate::types::{Symbols, Task};
 
 use chrono::{NaiveDateTime, Utc};
 use colored::*;
-use rusqlite::Connection;
+use rusqlite::{Connection, Params};
 
 pub fn get_symbols() -> Symbols {
     Symbols {
@@ -77,6 +77,25 @@ pub fn get_db_connection(db: &Connection) -> Option<&Connection> {
     .ok()?;
 
     Some(db)
+}
+
+pub fn prepare_todos<P>(db: &Connection, query: &String, params: P) -> Option<Vec<Task>>
+where
+    P: Params,
+{
+    let db = get_db_connection(db)?;
+    let mut statement = db.prepare(query).ok()?;
+    let query = statement
+        .query_map(params, |row| Ok(Task::from_db(row)))
+        .ok()?;
+    let tasks = query
+        .filter_map(|task| Some(task.unwrap()?))
+        .collect::<Vec<_>>();
+
+    match tasks.len() {
+        0 => None,
+        _ => Some(tasks),
+    }
 }
 
 #[cfg(test)]

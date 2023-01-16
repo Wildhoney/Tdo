@@ -1,6 +1,6 @@
 use crate::{
-    db::{add_todo, edit_todo, get_all_todos, get_todays_todos, get_todo, remove_todo},
-    types::{DbFile, Task},
+    db::{add_todo, edit_todo, get_todo, get_todos, remove_todo},
+    types::{DbFile, GetTodos, Task},
 };
 
 pub fn add(description: &str) -> Option<Task> {
@@ -26,7 +26,7 @@ pub fn edit(id: usize, description: Option<&String>, completed: Option<bool>) ->
 
 pub fn list(all: Option<bool>) -> Option<Vec<Task>> {
     DbFile::new().and_then(|db| match all {
-        Some(true) => get_all_todos(&db),
-        _ => get_todays_todos(&db),
+        Some(true) => get_todos(GetTodos::All, &db),
+        _ => get_todos(GetTodos::Today, &db),
     })
 }
