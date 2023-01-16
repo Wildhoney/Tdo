@@ -81,6 +81,20 @@ pub fn get_todays_todos() -> Option<Vec<Task>> {
     }
 }
 
+pub fn get_all_todos() -> Option<Vec<Task>> {
+    let db = get_db_connection()?;
+    let mut statement = db.prepare("SELECT * FROM tasks").ok()?;
+    let query = statement.query_map([], |row| Ok(Task::from_db(row))).ok()?;
+    let tasks = query
+        .filter_map(|task| Some(task.unwrap()?))
+        .collect::<Vec<_>>();
+
+    match tasks.len() {
+        0 => None,
+        _ => Some(tasks),
+    }
+}
+
 pub fn get_todo(id: usize) -> Option<Task> {
     let db = get_db_connection()?;
     let mut statement = db.prepare("SELECT * FROM tasks WHERE id >= ?1").ok()?;

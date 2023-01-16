@@ -39,7 +39,14 @@ pub fn run() -> Output {
 
             Output::Edit(edit(id, description, completed))
         }
-        Some((CMD_LIST, _)) => Output::List(list()),
+        Some((CMD_LIST, arg)) => {
+            let all = match arg.get_one::<String>("all") {
+                Some(value) => value.parse::<bool>().ok(),
+                _ => None,
+            };
+
+            Output::List(list(all))
+        }
         None | Some((_, _)) => Output::Unactionable,
     }
 }
@@ -85,6 +92,7 @@ pub fn get_args() -> Command {
         .subcommand(
             Command::new(CMD_LIST)
                 .alias("ls")
-                .about("List out all of the tasks to be done today"),
+                .about("List out all of the tasks to be done today")
+                .arg(Arg::new("all").short('a').long("all").required(false)),
         )
 }
