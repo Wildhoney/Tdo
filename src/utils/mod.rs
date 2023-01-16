@@ -2,6 +2,7 @@ use crate::types::Symbols;
 
 use chrono::{NaiveDateTime, Utc};
 use colored::*;
+use rusqlite::Connection;
 
 pub fn get_symbols() -> Symbols {
     Symbols {
@@ -60,6 +61,22 @@ fn get_pluralised(word: &str, count: i64) -> String {
 pub fn parse_date_from_row(row: Option<String>) -> Option<NaiveDateTime> {
     row.map(|date| NaiveDateTime::parse_from_str(&date, "%Y-%m-%d %H:%M:%S").ok())
         .unwrap_or(None)
+}
+
+pub fn get_db_connection(db: &Connection) -> Option<&Connection> {
+    db.execute(
+        "CREATE TABLE IF NOT EXISTS tasks (
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            description    TEXT NOT NULL,
+            completed      BOOL NOT NULL,
+            date_added     DATETIME DEFAULT CURRENT_TIMESTAMP,
+            date_modified  DATETIME DEFAULT CURRENT_TIMESTAMP
+        )",
+        (),
+    )
+    .ok()?;
+
+    Some(db)
 }
 
 #[cfg(test)]
