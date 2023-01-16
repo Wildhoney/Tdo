@@ -1,7 +1,9 @@
 use chrono::NaiveDateTime;
 use rusqlite::{Connection, Row};
 
-use crate::utils::parse_date_from_row;
+use self::utils::parse_date_from_row;
+
+mod utils;
 
 #[derive(Debug, PartialEq)]
 pub enum Output {
