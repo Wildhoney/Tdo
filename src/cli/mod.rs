@@ -9,6 +9,8 @@ pub const CMD_ADD: &str = "add";
 pub const CMD_REMOVE: &str = "remove";
 pub const CMD_EDIT: &str = "edit";
 pub const CMD_LIST: &str = "list";
+pub const CMD_COMPLETE: &str = "complete";
+pub const CMD_INCOMPLETE: &str = "incomplete";
 
 pub fn run() -> Output {
     match get_args().get_matches().subcommand() {
@@ -38,6 +40,24 @@ pub fn run() -> Output {
             };
 
             Output::Edit(edit(id, description, completed))
+        }
+        Some((CMD_COMPLETE, arg)) => {
+            let id = arg
+                .get_one::<String>("ID")
+                .unwrap()
+                .parse::<usize>()
+                .unwrap();
+
+            Output::Edit(edit(id, None, Some(true)))
+        }
+        Some((CMD_INCOMPLETE, arg)) => {
+            let id = arg
+                .get_one::<String>("ID")
+                .unwrap()
+                .parse::<usize>()
+                .unwrap();
+
+            Output::Edit(edit(id, None, Some(false)))
         }
         Some((CMD_LIST, arg)) => {
             let all = match arg.get_one::<String>("all") {
@@ -88,6 +108,18 @@ pub fn get_args() -> Command {
                         .required(false)
                         .action(ArgAction::Set),
                 ),
+        )
+        .subcommand(
+            Command::new(CMD_COMPLETE)
+                .about("Mark a task from within your list as complete")
+                .arg(arg!(<ID> "ID of the task that you've completed"))
+                .arg_required_else_help(true),
+        )
+        .subcommand(
+            Command::new(CMD_INCOMPLETE)
+                .about("Mark a task from within your list as incomplete")
+                .arg(arg!(<ID> "ID of the task that you've not completed"))
+                .arg_required_else_help(true),
         )
         .subcommand(
             Command::new(CMD_LIST)
