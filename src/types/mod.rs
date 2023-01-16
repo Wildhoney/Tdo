@@ -1,5 +1,5 @@
 use chrono::NaiveDateTime;
-use rusqlite::Row;
+use rusqlite::{Connection, Row};
 
 use crate::utils::parse_date_from_row;
 
@@ -18,7 +18,7 @@ pub struct Symbols {
     pub tick: String,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Task {
     pub id: Option<usize>,
     pub description: String,
@@ -51,5 +51,24 @@ impl Task {
             date_added,
             date_modified,
         })
+    }
+}
+
+#[derive(Clone)]
+pub struct DbFile {}
+
+#[derive(Clone)]
+pub struct DbMemory {}
+
+impl DbFile {
+    pub fn new() -> Option<Connection> {
+        Some(Connection::open("tdo.db").ok()?)
+    }
+}
+
+impl DbMemory {
+    #[allow(dead_code)]
+    pub fn new() -> Option<Connection> {
+        Some(Connection::open_in_memory().ok()?)
     }
 }
