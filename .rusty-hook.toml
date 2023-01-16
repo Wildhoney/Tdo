@@ -1,5 +1,6 @@
 [hooks]
-pre-commit = "cargo test"
+pre-commit = "make t"
+pre-push = "make b"
 
 [logging]
 verbose = true
