@@ -65,7 +65,17 @@ pub fn run() -> Output {
                 _ => None,
             };
 
-            Output::List(list(all))
+            let complete = match arg.get_one::<String>("complete") {
+                Some(value) => value.parse::<bool>().ok(),
+                _ => None,
+            };
+
+            let incomplete = match arg.get_one::<String>("incomplete") {
+                Some(value) => value.parse::<bool>().ok(),
+                _ => None,
+            };
+
+            Output::List(list(all, complete, incomplete))
         }
         None | Some((_, _)) => Output::Unactionable,
     }
@@ -125,6 +135,18 @@ pub fn get_args() -> Command {
             Command::new(CMD_LIST)
                 .alias("ls")
                 .about("List out all of the tasks to be done today")
-                .arg(Arg::new("all").short('a').long("all").required(false)),
+                .arg(Arg::new("all").short('a').long("all").required(false))
+                .arg(
+                    Arg::new("complete")
+                        .short('c')
+                        .long("complete")
+                        .required(false),
+                )
+                .arg(
+                    Arg::new("incomplete")
+                        .short('i')
+                        .long("incomplete")
+                        .required(false),
+                ),
         )
 }

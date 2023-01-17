@@ -46,6 +46,16 @@ pub fn edit_todo(db: &Connection, task: Task) -> Option<Task> {
 pub fn get_todos(when: GetTodos, db: &Connection) -> Option<Vec<Task>> {
     match when {
         GetTodos::All => prepare_todos(db, &"SELECT * FROM tasks".to_string(), []),
+        GetTodos::AllComplete => prepare_todos(
+            db,
+            &"SELECT * FROM tasks WHERE completed = 1".to_string(),
+            [],
+        ),
+        GetTodos::AllIncomplete => prepare_todos(
+            db,
+            &"SELECT * FROM tasks WHERE completed = 0".to_string(),
+            [],
+        ),
 
         GetTodos::Today => {
             let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
