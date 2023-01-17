@@ -34,18 +34,36 @@ fn put_footer() -> () {
 }
 
 fn put_add_task(task: Task) -> () {
-    let Symbols { bullet, .. } = get_symbols();
-    println!("{bullet} Added: {}", task.description)
+    let Symbols {
+        bullet, spacing, ..
+    } = get_symbols();
+    println!(
+        "{spacing}{}: {}",
+        format!("{bullet} You have added a new task"),
+        task.description.dimmed()
+    );
 }
 
 fn put_task_remove(task: Task) -> () {
-    let Symbols { bullet, .. } = get_symbols();
-    println!("{bullet} Removed: {}", task.description)
+    let Symbols {
+        bullet, spacing, ..
+    } = get_symbols();
+    println!(
+        "{spacing}{}: {}",
+        format!("{bullet} You have removed a task"),
+        task.description.dimmed()
+    );
 }
 
 fn put_task_edit(task: Task) -> () {
-    let Symbols { bullet, .. } = get_symbols();
-    println!("{bullet} Edited: {}", task.description)
+    let Symbols {
+        bullet, spacing, ..
+    } = get_symbols();
+    println!(
+        "{spacing}{}: {}",
+        format!("{bullet} You have edited a task"),
+        task.description.dimmed()
+    );
 }
 
 fn put_tasks_list(tasks: Vec<Task>) -> () {
@@ -62,14 +80,19 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
     );
 
     for task in tasks {
-        let Symbols { dot, bullet, tick } = get_symbols();
+        let Symbols {
+            dot,
+            bullet,
+            tick,
+            spacing,
+        } = get_symbols();
         let id = format!("{}{dot}", task.id.unwrap_or(0).to_string().dimmed());
         let icon = match task.completed {
             true => tick,
             false => bullet,
         };
 
-        println!("  {icon} {id} {}", task.description);
+        println!("{spacing}{icon} {id} {}", task.description);
 
         if let Some(date_added) = task.date_added {
             print!(
