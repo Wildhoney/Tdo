@@ -8,6 +8,7 @@ pub fn get_db_connection(db: &Connection) -> Option<&Connection> {
             id             INTEGER PRIMARY KEY AUTOINCREMENT,
             description    TEXT NOT NULL,
             completed      BOOL NOT NULL,
+            date_for       DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_added     DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_modified  DATETIME DEFAULT CURRENT_TIMESTAMP
         )",
