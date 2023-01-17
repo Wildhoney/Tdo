@@ -63,26 +63,14 @@ pub fn mark(arg: &ArgMatches, completed: bool) -> Option<Task> {
     })
 }
 
-pub fn list(arg: &ArgMatches) -> Option<Vec<Task>> {
-    let all = match arg.get_one::<String>("all") {
-        Some(value) => value.parse::<bool>().ok(),
-        _ => None,
-    };
+pub fn list_today() -> Option<Vec<Task>> {
+    DbFile::new().and_then(|db| get_todos(GetTodos::Today, &db))
+}
 
-    let complete = match arg.get_one::<String>("complete") {
-        Some(value) => value.parse::<bool>().ok(),
-        _ => None,
-    };
+pub fn list_overdue() -> Option<Vec<Task>> {
+    DbFile::new().and_then(|db| get_todos(GetTodos::Overdue, &db))
+}
 
-    let incomplete = match arg.get_one::<String>("incomplete") {
-        Some(value) => value.parse::<bool>().ok(),
-        _ => None,
-    };
-
-    DbFile::new().and_then(|db| match (all, incomplete, complete) {
-        (_, _, Some(true)) => get_todos(GetTodos::AllComplete, &db),
-        (_, Some(true), _) => get_todos(GetTodos::AllIncomplete, &db),
-        (Some(true), _, _) => get_todos(GetTodos::All, &db),
-        _ => get_todos(GetTodos::Today, &db),
-    })
+pub fn list_upcoming() -> Option<Vec<Task>> {
+    DbFile::new().and_then(|db| get_todos(GetTodos::Upcoming, &db))
 }

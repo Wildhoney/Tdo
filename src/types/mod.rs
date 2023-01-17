@@ -81,9 +81,9 @@ impl DbMemory {
     }
 }
 
+#[derive(Debug)]
 pub enum GetTodos {
-    All,
     Today,
-    AllIncomplete,
-    AllComplete,
+    Overdue,
+    Upcoming,
 }
