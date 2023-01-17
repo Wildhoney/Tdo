@@ -2,7 +2,7 @@
 
 > Terminal based todo app for managing today's tasks with gentle reminders.
 
-![Screenshot](media/screenshot.png)]
+![Screenshot](media/screenshot.png)
 
 ## Commands
 
