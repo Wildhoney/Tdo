@@ -10,7 +10,7 @@ pub fn get_db_connection(db: &Connection) -> Option<&Connection> {
             completed      BOOL NOT NULL,
             date_for       DATETIME DEFAULT CURRENT_TIMESTAMP,
             date_added     DATETIME DEFAULT CURRENT_TIMESTAMP,
-            date_modified  DATETIME DEFAULT CURRENT_TIMESTAMP
+            date_modified  DATETIME
         )",
         (),
     )

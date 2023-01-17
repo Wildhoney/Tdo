@@ -1,4 +1,4 @@
-use chrono::{NaiveDateTime, NaiveTime, Utc};
+use chrono::{Duration, NaiveDateTime, NaiveTime, Utc};
 use rusqlite::Connection;
 
 mod utils;
@@ -9,10 +9,11 @@ use self::utils::{get_db_connection, prepare_todos};
 
 pub fn add_todo(db: &Connection, task: Task) -> Option<Task> {
     let db = get_db_connection(db)?;
+    let date_for = task.date_for.unwrap_or(Utc::now().naive_local());
 
     db.execute(
-        "INSERT INTO tasks (description, completed) VALUES (?1, ?2)",
-        (&task.description, &task.completed),
+        "INSERT INTO tasks (description, completed, date_for) VALUES (?1, ?2, ?3)",
+        (&task.description, &task.completed, &date_for.to_string()),
     )
     .ok()?;
 
@@ -59,11 +60,16 @@ pub fn get_todos(when: GetTodos, db: &Connection) -> Option<Vec<Task>> {
 
         GetTodos::Today => {
             let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
-            let today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
+            let start_of_today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
+            let beginning_of_tomorrow =
+                NaiveDateTime::new(Utc::now().date_naive() + Duration::days(1), time).to_string();
+
+            println!("{:?}", beginning_of_tomorrow);
+
             prepare_todos(
                 db,
-                &"SELECT * FROM tasks WHERE date_added >= ?1".to_string(),
-                [today],
+                &"SELECT * FROM tasks WHERE date_for >= ?1 AND date_for < ?2".to_string(),
+                [start_of_today, beginning_of_tomorrow],
             )
         }
     }
@@ -88,7 +94,7 @@ mod tests {
     fn it_can_manage_todos() {
         let db = DbMemory::new().unwrap();
 
-        let task_from_add = add_todo(&db, Task::new("I am Imogen!".to_string()));
+        let task_from_add = add_todo(&db, Task::new("I am Imogen!".to_string(), None));
         assert!(task_from_add.is_some());
 
         let tasks_from_today = get_todos(GetTodos::Today, &db);

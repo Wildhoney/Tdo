@@ -5,10 +5,13 @@ use crate::{
     types::{DbFile, GetTodos, Task},
 };
 
+use super::utils::parse_date_from_string;
+
 pub fn add(arg: &ArgMatches) -> Option<Task> {
     let description = arg.get_one::<String>("DESCRIPTION").unwrap();
+    let date_for = arg.get_one::<String>("for");
 
-    let task = Task::new(description.to_string());
+    let task = Task::new(description.to_string(), parse_date_from_string(date_for));
     DbFile::new().and_then(|db| add_todo(&db, task))
 }
 
