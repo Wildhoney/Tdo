@@ -1,5 +1,5 @@
 use crate::{
-    renderer::utils::{get_elapsed_time, get_percentage_emoji},
+    renderer::utils::{get_elapsed_time, get_percentage_emoji, get_pluralised},
     types::{Output, Symbols, Task},
 };
 use colored::*;
@@ -92,8 +92,9 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
     }
 
     println!(
-        "You've completed {} tasks which equates to {} {}\n",
+        "You've completed {} {} which equates to {} {}\n",
         completed_count.to_string().bold(),
+        get_pluralised("task", completed_count as i64),
         format!("{:.0}%", completed_percentage).cyan().bold(),
         get_percentage_emoji(completed_percentage)
     );
