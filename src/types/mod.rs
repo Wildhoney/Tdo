@@ -19,6 +19,7 @@ pub struct Symbols {
     pub bullet: String,
     pub tick: String,
     pub spacing: String,
+    pub lightbulb: String,
 }
 
 #[derive(Debug, PartialEq, Clone)]

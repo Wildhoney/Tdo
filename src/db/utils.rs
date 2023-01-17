@@ -27,12 +27,10 @@ where
     let query = statement
         .query_map(params, |row| Ok(Task::from_db(row)))
         .ok()?;
+
     let tasks = query
         .filter_map(|task| Some(task.unwrap()?))
         .collect::<Vec<_>>();
 
-    match tasks.len() {
-        0 => None,
-        _ => Some(tasks),
-    }
+    Some(tasks)
 }

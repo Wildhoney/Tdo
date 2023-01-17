@@ -67,10 +67,29 @@ fn put_task_edit(task: Task) -> () {
 }
 
 fn put_tasks_list(tasks: Vec<Task>) -> () {
+    let Symbols {
+        dot,
+        bullet,
+        tick,
+        spacing,
+        lightbulb,
+    } = get_symbols();
+
     let completed_count = tasks
         .iter()
         .fold(0, |count, task| count + (task.completed as usize));
     let completed_percentage = (completed_count as f64 / tasks.len() as f64) * 100.0;
+
+    if tasks.len() == 0 {
+        println!("{spacing}{bullet} You haven't yet added any tasks for today!\n");
+        println!(
+            "{spacing} {lightbulb} {}{}{}",
+            "You may use ".dimmed(),
+            "tdo ls --all true".bright_white(),
+            " to show all of your incomplete todos.".dimmed()
+        );
+        return;
+    }
 
     println!(
         "You've completed {} tasks which equates to {} {}\n",
@@ -80,16 +99,10 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
     );
 
     for task in tasks {
-        let Symbols {
-            dot,
-            bullet,
-            tick,
-            spacing,
-        } = get_symbols();
         let id = format!("{}{dot}", task.id.unwrap_or(0).to_string().dimmed());
         let icon = match task.completed {
-            true => tick,
-            false => bullet,
+            true => tick.clone(),
+            false => bullet.clone(),
         };
 
         println!("{spacing}{icon} {id} {}", task.description);
