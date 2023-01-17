@@ -1,16 +1,13 @@
-use clap::{arg, Arg, ArgAction, Command};
-
 use crate::{
     actions::{add, edit, list, remove},
     types::Output,
 };
 
-pub const CMD_ADD: &str = "add";
-pub const CMD_REMOVE: &str = "remove";
-pub const CMD_EDIT: &str = "edit";
-pub const CMD_LIST: &str = "list";
-pub const CMD_COMPLETE: &str = "complete";
-pub const CMD_INCOMPLETE: &str = "incomplete";
+use self::utils::{
+    get_args, CMD_ADD, CMD_COMPLETE, CMD_EDIT, CMD_INCOMPLETE, CMD_LIST, CMD_REMOVE,
+};
+
+mod utils;
 
 pub fn run() -> Output {
     match get_args().get_matches().subcommand() {
@@ -79,74 +76,4 @@ pub fn run() -> Output {
         }
         None | Some((_, _)) => Output::Unactionable,
     }
-}
-
-pub fn get_args() -> Command {
-    Command::new("tdo")
-        .about("Terminal based todo app for managing today's tasks with gentle reminders.")
-        .subcommand_required(true)
-        .arg_required_else_help(true)
-        .allow_external_subcommands(true)
-        .subcommand(
-            Command::new(CMD_ADD)
-                .about("Add a task to your list")
-                .arg(arg!(<DESCRIPTION> "Description of the task that needs to be done today"))
-                .arg_required_else_help(true),
-        )
-        .subcommand(
-            Command::new(CMD_REMOVE)
-                .alias("rm")
-                .about("Remove a task from your list")
-                .arg(arg!(<ID> "ID of the task that no longer needs to be done today"))
-                .arg_required_else_help(true),
-        )
-        .subcommand(
-            Command::new(CMD_EDIT)
-                .about("Edit a task from within your list")
-                .arg(arg!(<ID> "ID of the task that you're editing"))
-                .arg_required_else_help(true)
-                .arg(
-                    Arg::new("description")
-                        .short('d')
-                        .long("description")
-                        .required(false),
-                )
-                .arg(
-                    Arg::new("completed")
-                        .short('c')
-                        .long("completed")
-                        .required(false)
-                        .action(ArgAction::Set),
-                ),
-        )
-        .subcommand(
-            Command::new(CMD_COMPLETE)
-                .about("Mark a task from within your list as complete")
-                .arg(arg!(<ID> "ID of the task that you've completed"))
-                .arg_required_else_help(true),
-        )
-        .subcommand(
-            Command::new(CMD_INCOMPLETE)
-                .about("Mark a task from within your list as incomplete")
-                .arg(arg!(<ID> "ID of the task that you've not completed"))
-                .arg_required_else_help(true),
-        )
-        .subcommand(
-            Command::new(CMD_LIST)
-                .alias("ls")
-                .about("List out all of the tasks to be done today")
-                .arg(Arg::new("all").short('a').long("all").required(false))
-                .arg(
-                    Arg::new("complete")
-                        .short('c')
-                        .long("complete")
-                        .required(false),
-                )
-                .arg(
-                    Arg::new("incomplete")
-                        .short('i')
-                        .long("incomplete")
-                        .required(false),
-                ),
-        )
 }
