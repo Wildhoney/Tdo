@@ -80,4 +80,6 @@ impl DbMemory {
 pub enum GetTodos {
     All,
     Today,
+    AllIncomplete,
+    AllComplete,
 }

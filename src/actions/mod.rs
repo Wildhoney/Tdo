@@ -24,9 +24,15 @@ pub fn edit(id: usize, description: Option<&String>, completed: Option<bool>) ->
     })
 }
 
-pub fn list(all: Option<bool>) -> Option<Vec<Task>> {
-    DbFile::new().and_then(|db| match all {
-        Some(true) => get_todos(GetTodos::All, &db),
+pub fn list(
+    all: Option<bool>,
+    complete: Option<bool>,
+    incomplete: Option<bool>,
+) -> Option<Vec<Task>> {
+    DbFile::new().and_then(|db| match (all, incomplete, complete) {
+        (_, _, Some(true)) => get_todos(GetTodos::AllComplete, &db),
+        (_, Some(true), _) => get_todos(GetTodos::AllIncomplete, &db),
+        (Some(true), _, _) => get_todos(GetTodos::All, &db),
         _ => get_todos(GetTodos::Today, &db),
     })
 }

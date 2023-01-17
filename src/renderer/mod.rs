@@ -85,7 +85,7 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
         println!(
             "{spacing} {lightbulb} {}{}{}",
             "You may use ".dimmed(),
-            "tdo ls --all true".bright_white(),
+            "tdo ls --incomplete true".bright_white(),
             " to show all of your incomplete todos.".dimmed()
         );
         return;
