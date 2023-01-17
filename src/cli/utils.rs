@@ -1,3 +1,4 @@
+use chrono::{Duration, NaiveDateTime, NaiveTime, Utc};
 use clap::{arg, Arg, Command};
 
 pub const CMD_ADD: &str = "add";
@@ -17,7 +18,8 @@ pub fn get_args() -> Command {
             Command::new(CMD_ADD)
                 .about("Add a task to your list")
                 .arg(arg!(<DESCRIPTION> "Description of the task that needs to be done today"))
-                .arg_required_else_help(true),
+                .arg_required_else_help(true)
+                .arg(Arg::new("for").short('f').long("for").required(false)),
         )
         .subcommand(
             Command::new(CMD_REMOVE)
@@ -74,4 +76,21 @@ pub fn get_args() -> Command {
                         .required(false),
                 ),
         )
+}
+
+pub fn parse_date_from_string(date: Option<&String>) -> Option<NaiveDateTime> {
+    let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
+
+    if let Some(date) = date {
+        return match date.as_str() {
+            "today" => Some(NaiveDateTime::new(Utc::now().date_naive(), time)),
+            "tomorrow" => Some(NaiveDateTime::new(
+                Utc::now().date_naive() + Duration::days(1),
+                time,
+            )),
+            _ => None,
+        };
+    }
+
+    None
 }
