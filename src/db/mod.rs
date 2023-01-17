@@ -45,26 +45,32 @@ pub fn edit_todo(db: &Connection, task: Task) -> Option<Task> {
 }
 
 pub fn get_todos(when: GetTodos, db: &Connection) -> Option<Vec<Task>> {
-    match when {
-        GetTodos::All => prepare_todos(db, &"SELECT * FROM tasks".to_string(), []),
-        GetTodos::AllComplete => prepare_todos(
-            db,
-            &"SELECT * FROM tasks WHERE completed = 1".to_string(),
-            [],
-        ),
-        GetTodos::AllIncomplete => prepare_todos(
-            db,
-            &"SELECT * FROM tasks WHERE completed = 0".to_string(),
-            [],
-        ),
+    let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
 
-        GetTodos::Today => {
-            let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
+    match when {
+        GetTodos::Overdue => {
             let start_of_today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
+
+            prepare_todos(
+                db,
+                &"SELECT * FROM tasks WHERE completed = 0 AND date_for < ?1".to_string(),
+                [start_of_today],
+            )
+        }
+        GetTodos::Upcoming => {
             let beginning_of_tomorrow =
                 NaiveDateTime::new(Utc::now().date_naive() + Duration::days(1), time).to_string();
 
-            println!("{:?}", beginning_of_tomorrow);
+            prepare_todos(
+                db,
+                &"SELECT * FROM tasks WHERE completed = 0 AND date_for >= ?1".to_string(),
+                [beginning_of_tomorrow],
+            )
+        }
+        GetTodos::Today => {
+            let start_of_today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
+            let beginning_of_tomorrow =
+                NaiveDateTime::new(Utc::now().date_naive() + Duration::days(1), time).to_string();
 
             prepare_todos(
                 db,
@@ -109,9 +115,5 @@ mod tests {
 
         let remove = remove_todo(&db, task_from_add.unwrap());
         assert!(remove.is_some());
-
-        let todays_todos = get_todos(GetTodos::All, &db);
-        assert!(todays_todos.is_some());
-        assert_eq!(todays_todos.unwrap().len(), 0);
     }
 }
