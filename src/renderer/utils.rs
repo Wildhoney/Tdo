@@ -52,7 +52,7 @@ pub fn get_elapsed_time(date: NaiveDateTime) -> String {
     return format!("{value} {suffix}");
 }
 
-fn get_pluralised(word: &str, count: i64) -> String {
+pub fn get_pluralised(word: &str, count: i64) -> String {
     match count {
         1 => word.to_string(),
         _ => format!("{}s", word),
