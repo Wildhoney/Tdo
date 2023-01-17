@@ -2,6 +2,8 @@
 
 > Terminal based todo app for managing today's tasks with gentle reminders.
 
+![Screenshot](media/screenshot.png)]
+
 ## Commands
 
 We will first add three tasks &ndash; two for today and one for tomorrow:
