@@ -95,6 +95,7 @@ mod tests {
         assert!(remove.is_some());
 
         let todays_todos = get_todos(GetTodos::All, &db);
-        assert!(todays_todos.is_none());
+        assert!(todays_todos.is_some());
+        assert_eq!(todays_todos.unwrap().len(), 0);
     }
 }

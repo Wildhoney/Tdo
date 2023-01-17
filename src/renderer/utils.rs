@@ -9,6 +9,7 @@ pub fn get_symbols() -> Symbols {
         bullet: "◦".dimmed().to_string(),
         tick: "✓".bright_green().to_string(),
         spacing: "  ".to_string(),
+        lightbulb: "💡".to_string(),
     }
 }
 
