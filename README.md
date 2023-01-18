@@ -20,10 +20,10 @@ Using the `ls` command we will see that `Athos` and `Porthos` both need doing to
 foo@bar:~$ tdo ls
 ```
 
-However as `Aramis` was added as tomorrow's task, we won't see it until our system clock changes to tomorrow &ndash; unless we use the `upcoming` command to see every task after today:
+However as `Aramis` was added as tomorrow's task, we won't see it until our system clock changes to tomorrow &ndash; unless we use the `ls upcoming` command to see every task after today:
 
 ```console
-foo@bar:~$ tdo upcoming
+foo@bar:~$ tdo ls upcoming
 ```
 
 We've just realised that we don't need the `Porthos` task any more, so we can go ahead and `remove` that (we can use the `ls` command to find its unique ID but assuming it's a fresh copy it will be `2`):

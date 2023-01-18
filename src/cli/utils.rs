@@ -7,8 +7,7 @@ const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const CMD_ADD: &str = "add";
 pub const CMD_REMOVE: &str = "remove";
 pub const CMD_EDIT: &str = "edit";
-pub const CMD_LIST_TODAY: &str = "list";
-pub const CMD_LIST_UPCOMING: &str = "upcoming";
+pub const CMD_LIST: &str = "list";
 pub const CMD_MARK: &str = "mark";
 
 pub fn get_args() -> Command {
@@ -65,14 +64,12 @@ pub fn get_args() -> Command {
                 .subcommand(Command::new("incomplete").alias("not-done")),
         )
         .subcommand(
-            Command::new(CMD_LIST_TODAY)
+            Command::new(CMD_LIST)
                 .alias("ls")
-                .about("List all of the tasks for today."),
-        )
-        .subcommand(
-            Command::new(CMD_LIST_UPCOMING)
-                .alias("future")
-                .about("List all of the upcoming tasks."),
+                .about("List all of the tasks.")
+                .subcommand(Command::new("today"))
+                .subcommand(Command::new("upcoming").alias("future"))
+                .subcommand_required(false),
         )
 }
 

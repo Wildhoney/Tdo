@@ -69,10 +69,10 @@ pub fn mark(arg: &ArgMatches) -> Option<Task> {
     })
 }
 
-pub fn list_today() -> Option<Vec<Task>> {
-    DbFile::new().and_then(|db| get_todos(GetTodos::Today, &db))
-}
-
-pub fn list_upcoming() -> Option<Vec<Task>> {
-    DbFile::new().and_then(|db| get_todos(GetTodos::Upcoming, &db))
+pub fn list(arg: &ArgMatches) -> Option<Vec<Task>> {
+    DbFile::new().and_then(|db| match arg.subcommand() {
+        Some(("today", _)) | None => get_todos(GetTodos::Today, &db),
+        Some(("upcoming", _)) => get_todos(GetTodos::Upcoming, &db),
+        _ => return None,
+    })
 }
