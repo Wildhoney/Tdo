@@ -1,6 +1,9 @@
 use chrono::{Duration, NaiveDateTime, NaiveTime, Utc};
 use clap::{arg, Arg, Command};
 
+const PKG_NAME: &str = env!("CARGO_PKG_NAME");
+const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
+
 pub const CMD_ADD: &str = "add";
 pub const CMD_REMOVE: &str = "remove";
 pub const CMD_EDIT: &str = "edit";
@@ -10,7 +13,8 @@ pub const CMD_COMPLETE: &str = "complete";
 pub const CMD_INCOMPLETE: &str = "incomplete";
 
 pub fn get_args() -> Command {
-    Command::new("tdo")
+    Command::new(PKG_NAME)
+        .version(PKG_VERSION)
         .about("Terminal based todo app for managing today's tasks with gentle reminders.")
         .subcommand_required(true)
         .arg_required_else_help(true)
