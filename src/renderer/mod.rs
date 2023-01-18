@@ -111,13 +111,13 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
         if let Some(date_added) = task.date_added {
             print!(
                 "{}",
-                format!("       Added {} ago", get_elapsed_time(date_added)).dimmed()
+                format!("       Added {}", get_elapsed_time(date_added)).dimmed()
             );
 
             if let Some(date_modified) = task.date_modified {
                 print!(
                     "{}",
-                    format!(" (edited {} ago)", get_elapsed_time(date_modified)).dimmed()
+                    format!(" (edited {})", get_elapsed_time(date_modified)).dimmed()
                 );
             }
 
