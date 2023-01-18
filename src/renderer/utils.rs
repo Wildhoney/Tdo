@@ -132,4 +132,16 @@ mod tests {
         assert_eq!(get_percentage_emoji(82.5), emoji);
         assert_eq!(get_percentage_emoji(100.0), emoji);
     }
+
+    #[test]
+    fn it_can_determine_when_overdue() {
+        let one_second_ago = Utc::now().naive_utc() - Duration::seconds(1);
+        assert_eq!(is_overdue(one_second_ago), false);
+
+        let one_day_ago = Utc::now().naive_utc() - Duration::days(1);
+        assert_eq!(is_overdue(one_day_ago), true);
+
+        let six_months_ago = Utc::now().naive_utc() - Duration::weeks(26);
+        assert_eq!(is_overdue(six_months_ago), true);
+    }
 }
