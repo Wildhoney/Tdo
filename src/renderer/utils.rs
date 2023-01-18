@@ -1,6 +1,6 @@
 use crate::types::Symbols;
 
-use chrono::{NaiveDateTime, Utc};
+use chrono::{NaiveDateTime, NaiveTime, Utc};
 use colored::*;
 
 pub fn get_symbols() -> Symbols {
@@ -55,6 +55,12 @@ pub fn get_elapsed_time(date: NaiveDateTime) -> String {
         (_, _, _, weeks) if weeks < 8 => format!("{} {} ago", weeks, get_pluralised("week", weeks)),
         _ => "a long time ago".to_string(),
     }
+}
+
+pub fn is_overdue(date: NaiveDateTime) -> bool {
+    let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
+    let beginning_of_today = NaiveDateTime::new(Utc::now().date_naive(), time);
+    date < beginning_of_today
 }
 
 pub fn get_pluralised(word: &str, count: i64) -> String {

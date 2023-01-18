@@ -5,7 +5,6 @@ pub const CMD_ADD: &str = "add";
 pub const CMD_REMOVE: &str = "remove";
 pub const CMD_EDIT: &str = "edit";
 pub const CMD_LIST_TODAY: &str = "list";
-pub const CMD_LIST_OVERDUE: &str = "overdue";
 pub const CMD_LIST_UPCOMING: &str = "upcoming";
 pub const CMD_COMPLETE: &str = "complete";
 pub const CMD_INCOMPLETE: &str = "incomplete";
@@ -64,11 +63,6 @@ pub fn get_args() -> Command {
             Command::new(CMD_LIST_TODAY)
                 .alias("ls")
                 .about("List out all of the tasks to be done today"),
-        )
-        .subcommand(
-            Command::new(CMD_LIST_OVERDUE)
-                .alias("o")
-                .about("List out all of the tasks before today that are incomplete"),
         )
         .subcommand(
             Command::new(CMD_LIST_UPCOMING)

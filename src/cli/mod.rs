@@ -1,10 +1,10 @@
 use crate::types::Output;
 
 use self::{
-    actions::{add, edit, list_overdue, list_today, list_upcoming, mark, remove},
+    actions::{add, edit, list_today, list_upcoming, mark, remove},
     utils::{
-        get_args, CMD_ADD, CMD_COMPLETE, CMD_EDIT, CMD_INCOMPLETE, CMD_LIST_OVERDUE,
-        CMD_LIST_TODAY, CMD_LIST_UPCOMING, CMD_REMOVE,
+        get_args, CMD_ADD, CMD_COMPLETE, CMD_EDIT, CMD_INCOMPLETE, CMD_LIST_TODAY,
+        CMD_LIST_UPCOMING, CMD_REMOVE,
     },
 };
 
@@ -19,7 +19,6 @@ pub fn run() -> Output {
         Some((CMD_COMPLETE, arg)) => Output::Edit(mark(arg, true)),
         Some((CMD_INCOMPLETE, arg)) => Output::Edit(mark(arg, false)),
         Some((CMD_LIST_TODAY, _)) => Output::List(list_today()),
-        Some((CMD_LIST_OVERDUE, _)) => Output::List(list_overdue()),
         Some((CMD_LIST_UPCOMING, _)) => Output::List(list_upcoming()),
         None | Some((_, _)) => Output::Unactionable,
     }
