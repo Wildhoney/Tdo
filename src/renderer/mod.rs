@@ -81,18 +81,20 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
     let completed_percentage = (completed_count as f64 / tasks.len() as f64) * 100.0;
 
     if tasks.len() == 0 {
-        println!("{spacing}{bullet} You haven't yet added any tasks for today!\n");
+        println!("{spacing}{bullet} There are no tasks available to show you! 😧\n");
         println!(
-            "{spacing} {lightbulb} {}{}{}",
+            "{spacing} {lightbulb} {}{}{}{}{} ",
             "You may use ".dimmed(),
             "tdo upcoming".bright_white(),
-            " to show todos that are due in the future.".dimmed()
+            " to show futures todos and ".dimmed(),
+            "tdo add <description>".bright_white(),
+            " to add more.".dimmed()
         );
         return;
     }
 
     println!(
-        "You've completed {} {} which equates to {} {}\n",
+        " You've completed {} {} which equates to {} {}\n\n",
         completed_count.to_string().bold(),
         get_pluralised("task", completed_count as i64),
         format!("{:.0}%", completed_percentage).cyan().bold(),
