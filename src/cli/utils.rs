@@ -21,21 +21,26 @@ pub fn get_args() -> Command {
         .subcommand(
             Command::new(CMD_ADD)
                 .about("Add a task to your list")
-                .arg(arg!(<DESCRIPTION> "Description of the task that needs to be done today"))
+                .arg(arg!(<description> "Description of the task."))
                 .arg_required_else_help(true)
                 .arg(Arg::new("for").short('f').long("for").required(false)),
         )
         .subcommand(
             Command::new(CMD_REMOVE)
-                .alias("rm")
                 .about("Remove a task from your list")
-                .arg(arg!(<ID> "ID of the task that no longer needs to be done today"))
+                .alias("rm")
+                .alias("del")
+                .alias("delete")
+                .arg(arg!(<id> "ID of the task to remove."))
                 .arg_required_else_help(true),
         )
         .subcommand(
             Command::new(CMD_EDIT)
                 .about("Edit a task from within your list")
-                .arg(arg!(<ID> "ID of the task that you're editing"))
+                .alias("modify")
+                .alias("update")
+                .alias("change")
+                .arg(arg!(<id> "ID of the task to edit."))
                 .arg_required_else_help(true)
                 .arg(
                     Arg::new("description")
@@ -52,21 +57,22 @@ pub fn get_args() -> Command {
         )
         .subcommand(
             Command::new(CMD_MARK)
-                .about("Mark a task from within your list as complete or incomplete")
-                .arg(arg!(<ID> "ID of the task that you've completed"))
+                .about("Mark a task as complete or incomplete.")
+                .alias("set")
+                .arg(arg!(<id> "ID of the task that you've completed"))
                 .arg_required_else_help(true)
-                .subcommand(Command::new("complete"))
-                .subcommand(Command::new("incomplete")),
+                .subcommand(Command::new("complete").alias("done"))
+                .subcommand(Command::new("incomplete").alias("not-done")),
         )
         .subcommand(
             Command::new(CMD_LIST_TODAY)
                 .alias("ls")
-                .about("List out all of the tasks to be done today"),
+                .about("List all of the tasks for today."),
         )
         .subcommand(
             Command::new(CMD_LIST_UPCOMING)
-                .alias("u")
-                .about("List out all of the tasks to be tackled after today"),
+                .alias("future")
+                .about("List all of the upcoming tasks."),
         )
 }
 
