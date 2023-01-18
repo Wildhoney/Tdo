@@ -13,7 +13,11 @@ pub fn add_todo(db: &Connection, task: Task) -> Option<Task> {
 
     db.execute(
         "INSERT INTO tasks (description, completed, date_for) VALUES (?1, ?2, ?3)",
-        (&task.description, &task.completed, &date_for.to_string()),
+        (
+            &task.description,
+            &task.completed,
+            &date_for.format("%Y-%m-%d %H:%M:%S").to_string(),
+        ),
     )
     .ok()?;
 
@@ -48,15 +52,6 @@ pub fn get_todos(when: GetTodos, db: &Connection) -> Option<Vec<Task>> {
     let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
 
     match when {
-        GetTodos::Overdue => {
-            let start_of_today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
-
-            prepare_todos(
-                db,
-                &"SELECT * FROM tasks WHERE completed = 0 AND date_for < ?1".to_string(),
-                [start_of_today],
-            )
-        }
         GetTodos::Upcoming => {
             let beginning_of_tomorrow =
                 NaiveDateTime::new(Utc::now().date_naive() + Duration::days(1), time).to_string();
@@ -69,13 +64,15 @@ pub fn get_todos(when: GetTodos, db: &Connection) -> Option<Vec<Task>> {
         }
         GetTodos::Today => {
             let start_of_today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
+            let beginning_of_today =
+                NaiveDateTime::new(Utc::now().date_naive() + Duration::days(1), time).to_string();
             let beginning_of_tomorrow =
                 NaiveDateTime::new(Utc::now().date_naive() + Duration::days(1), time).to_string();
 
             prepare_todos(
                 db,
-                &"SELECT * FROM tasks WHERE date_for >= ?1 AND date_for < ?2".to_string(),
-                [start_of_today, beginning_of_tomorrow],
+                &"SELECT * FROM tasks WHERE (date_for >= ?1 AND date_for < ?2) OR (date_for < ?3 AND completed = 0) ORDER BY date_for DESC".to_string(),
+                [start_of_today, beginning_of_tomorrow, beginning_of_today],
             )
         }
     }

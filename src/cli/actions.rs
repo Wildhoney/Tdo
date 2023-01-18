@@ -67,10 +67,6 @@ pub fn list_today() -> Option<Vec<Task>> {
     DbFile::new().and_then(|db| get_todos(GetTodos::Today, &db))
 }
 
-pub fn list_overdue() -> Option<Vec<Task>> {
-    DbFile::new().and_then(|db| get_todos(GetTodos::Overdue, &db))
-}
-
 pub fn list_upcoming() -> Option<Vec<Task>> {
     DbFile::new().and_then(|db| get_todos(GetTodos::Upcoming, &db))
 }

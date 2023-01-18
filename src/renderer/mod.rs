@@ -1,5 +1,5 @@
 use crate::{
-    renderer::utils::{get_elapsed_time, get_percentage_emoji, get_pluralised},
+    renderer::utils::{get_elapsed_time, get_percentage_emoji, get_pluralised, is_overdue},
     types::{Output, Symbols, Task},
 };
 use colored::*;
@@ -85,8 +85,8 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
         println!(
             "{spacing} {lightbulb} {}{}{}",
             "You may use ".dimmed(),
-            "tdo overdue".bright_white(),
-            " to show all of your incomplete todos.".dimmed()
+            "tdo upcoming".bright_white(),
+            " to show todos that are due in the future.".dimmed()
         );
         return;
     }
@@ -106,7 +106,20 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
             false => bullet.clone(),
         };
 
-        println!("{spacing}{icon} {id} {}", task.description);
+        print!("{spacing}{icon} {id} {}", task.description);
+
+        if let Some(date_for) = task.date_for {
+            if is_overdue(date_for) {
+                print!(
+                    " {}",
+                    format!(" {}{} ", "overdue: ", get_elapsed_time(date_for))
+                        .on_bright_red()
+                        .black()
+                );
+            }
+        }
+
+        print!("\n");
 
         if let Some(date_added) = task.date_added {
             print!(

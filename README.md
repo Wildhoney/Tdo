@@ -20,7 +20,7 @@ Using the `ls` command we will see that `Athos` and `Porthos` both need doing to
 foo@bar:~$ tdo ls
 ```
 
-However as `Aramis` was added as tomorrow's task, we won't see it until our system clock changes to tomorrow &ndash; unless we use the `upcoming` command to see every task after today (there is also an `overdue` command for seeing what's incomplete before today):
+However as `Aramis` was added as tomorrow's task, we won't see it until our system clock changes to tomorrow &ndash; unless we use the `upcoming` command to see every task after today:
 
 ```console
 foo@bar:~$ tdo upcoming
