@@ -38,8 +38,8 @@ We've also realised we prefer the fourth Muskateer so we'll replace `Athos` with
 foo@bar:~$ tdo edit 1 --description "D'Artagnan"
 ```
 
-And as we're exceptional at what we do, we'll mark `D'Artagnan` as completed which we can later validate with the aforementioned `ls` command (in the unlikely event we've made a mistake we can revert that with the `incomplete` command):
+And as we're exceptional at what we do, we'll mark `D'Artagnan` as completed which we can later validate with the aforementioned `ls` command (in the unlikely event we've made a mistake we can revert that with the `mark incomplete <id>` command):
 
 ```console
-foo@bar:~$ tdo complete 1
+foo@bar:~$ tdo mark complete 1
 ```

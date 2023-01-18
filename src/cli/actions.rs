@@ -49,7 +49,7 @@ pub fn edit(arg: &ArgMatches) -> Option<Task> {
     })
 }
 
-pub fn mark(arg: &ArgMatches, completed: bool) -> Option<Task> {
+pub fn mark(arg: &ArgMatches) -> Option<Task> {
     let id = arg
         .get_one::<String>("ID")
         .unwrap()
@@ -58,6 +58,12 @@ pub fn mark(arg: &ArgMatches, completed: bool) -> Option<Task> {
 
     DbFile::new().and_then(|db| {
         let mut task = get_todo(&db, id)?;
+        let completed = match arg.subcommand() {
+            Some(("complete", _)) => true,
+            Some(("incomplete", _)) => false,
+            _ => return None,
+        };
+
         task.completed = completed;
         edit_todo(&db, task)
     })

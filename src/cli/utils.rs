@@ -9,8 +9,7 @@ pub const CMD_REMOVE: &str = "remove";
 pub const CMD_EDIT: &str = "edit";
 pub const CMD_LIST_TODAY: &str = "list";
 pub const CMD_LIST_UPCOMING: &str = "upcoming";
-pub const CMD_COMPLETE: &str = "complete";
-pub const CMD_INCOMPLETE: &str = "incomplete";
+pub const CMD_MARK: &str = "mark";
 
 pub fn get_args() -> Command {
     Command::new(PKG_NAME)
@@ -52,16 +51,12 @@ pub fn get_args() -> Command {
                 ),
         )
         .subcommand(
-            Command::new(CMD_COMPLETE)
-                .about("Mark a task from within your list as complete")
+            Command::new(CMD_MARK)
+                .about("Mark a task from within your list as complete or incomplete")
                 .arg(arg!(<ID> "ID of the task that you've completed"))
-                .arg_required_else_help(true),
-        )
-        .subcommand(
-            Command::new(CMD_INCOMPLETE)
-                .about("Mark a task from within your list as incomplete")
-                .arg(arg!(<ID> "ID of the task that you've not completed"))
-                .arg_required_else_help(true),
+                .arg_required_else_help(true)
+                .subcommand(Command::new("complete"))
+                .subcommand(Command::new("incomplete")),
         )
         .subcommand(
             Command::new(CMD_LIST_TODAY)
