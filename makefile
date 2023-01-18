@@ -11,6 +11,11 @@ test:
 format:
 	cargo fmt
 
+install:
+	make b
+	sudo cp bin/tdo /usr/local/bin
+
 b: build
 t: test
 f: format
+i: install
