@@ -87,6 +87,10 @@ pub fn parse_date_from_string(date: Option<&String>) -> Option<NaiveDateTime> {
                 Utc::now().date_naive() + Duration::days(1),
                 time,
             )),
+            "overmorrow" => Some(NaiveDateTime::new(
+                Utc::now().date_naive() + Duration::days(2),
+                time,
+            )),
             _ => None,
         };
     }
