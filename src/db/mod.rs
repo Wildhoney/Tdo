@@ -71,7 +71,11 @@ pub fn get_todos(when: GetTodos, db: &Connection) -> Option<Vec<Task>> {
 
             prepare_todos(
                 db,
-                &"SELECT * FROM tasks WHERE (date_for >= ?1 AND date_for < ?2) OR (date_for < ?3 AND completed = 0) ORDER BY date_for DESC".to_string(),
+                &"SELECT * FROM tasks
+                  WHERE (date_for >= ?1 AND date_for < ?2)
+                  OR    (date_for < ?3 AND completed = 0)
+                  ORDER BY date_for DESC"
+                    .to_string(),
                 [start_of_today, beginning_of_tomorrow, beginning_of_today],
             )
         }
