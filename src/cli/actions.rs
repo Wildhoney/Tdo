@@ -8,7 +8,7 @@ use crate::{
 use super::utils::parse_date_from_string;
 
 pub fn add(arg: &ArgMatches) -> Option<Task> {
-    let description = arg.get_one::<String>("DESCRIPTION").unwrap();
+    let description = arg.get_one::<String>("description").unwrap();
     let date_for = arg.get_one::<String>("for");
 
     let task = Task::new(description.to_string(), parse_date_from_string(date_for));
@@ -17,7 +17,7 @@ pub fn add(arg: &ArgMatches) -> Option<Task> {
 
 pub fn remove(arg: &ArgMatches) -> Option<Task> {
     let id = arg
-        .get_one::<String>("ID")
+        .get_one::<String>("id")
         .unwrap()
         .parse::<usize>()
         .unwrap();
@@ -30,7 +30,7 @@ pub fn remove(arg: &ArgMatches) -> Option<Task> {
 
 pub fn edit(arg: &ArgMatches) -> Option<Task> {
     let id = arg
-        .get_one::<String>("ID")
+        .get_one::<String>("id")
         .unwrap()
         .parse::<usize>()
         .unwrap();
@@ -51,7 +51,7 @@ pub fn edit(arg: &ArgMatches) -> Option<Task> {
 
 pub fn mark(arg: &ArgMatches) -> Option<Task> {
     let id = arg
-        .get_one::<String>("ID")
+        .get_one::<String>("id")
         .unwrap()
         .parse::<usize>()
         .unwrap();
