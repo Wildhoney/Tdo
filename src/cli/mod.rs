@@ -2,10 +2,7 @@ use crate::types::Output;
 
 use self::{
     actions::{add, edit, list_today, list_upcoming, mark, remove},
-    utils::{
-        get_args, CMD_ADD, CMD_COMPLETE, CMD_EDIT, CMD_INCOMPLETE, CMD_LIST_TODAY,
-        CMD_LIST_UPCOMING, CMD_REMOVE,
-    },
+    utils::{get_args, CMD_ADD, CMD_EDIT, CMD_LIST_TODAY, CMD_LIST_UPCOMING, CMD_MARK, CMD_REMOVE},
 };
 
 mod actions;
@@ -16,8 +13,7 @@ pub fn run() -> Output {
         Some((CMD_ADD, arg)) => Output::Add(add(arg)),
         Some((CMD_REMOVE, arg)) => Output::Remove(remove(arg)),
         Some((CMD_EDIT, arg)) => Output::Edit(edit(arg)),
-        Some((CMD_COMPLETE, arg)) => Output::Edit(mark(arg, true)),
-        Some((CMD_INCOMPLETE, arg)) => Output::Edit(mark(arg, false)),
+        Some((CMD_MARK, arg)) => Output::Edit(mark(arg)),
         Some((CMD_LIST_TODAY, _)) => Output::List(list_today()),
         Some((CMD_LIST_UPCOMING, _)) => Output::List(list_upcoming()),
         None | Some((_, _)) => Output::Unactionable,
