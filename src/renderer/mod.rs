@@ -85,7 +85,7 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
         println!(
             "{spacing} {lightbulb} {}{}{}{}{} ",
             "You may use ".dimmed(),
-            "tdo upcoming".bright_white(),
+            "tdo ls upcoming".bright_white(),
             " to show futures todos and ".dimmed(),
             "tdo add <description>".bright_white(),
             " to add more.".dimmed()
