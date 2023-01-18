@@ -17,6 +17,7 @@ pub fn print(output: Output) -> () {
         Output::Remove(Some(task)) => put_task_remove(task),
         Output::Edit(Some(task)) => put_task_edit(task),
         Output::List(Some(tasks)) => put_tasks_list(tasks),
+        Output::Database(db_path) => put_database(db_path),
         _ => println!("There appears to be a problem."),
     }
 
@@ -141,4 +142,17 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
 
         print!("\n");
     }
+}
+
+fn put_database(path: String) -> () {
+    let Symbols {
+        spacing, lightbulb, ..
+    } = get_symbols();
+
+    println!("{spacing} Location: {}\n", path.bold());
+
+    println!(
+        "{spacing} {lightbulb} {}",
+        "You could open the SQLite DB file in an application such as TablePlus!".dimmed()
+    )
 }

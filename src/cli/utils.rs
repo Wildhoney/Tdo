@@ -9,6 +9,7 @@ pub const CMD_REMOVE: &str = "remove";
 pub const CMD_EDIT: &str = "edit";
 pub const CMD_LIST: &str = "list";
 pub const CMD_MARK: &str = "mark";
+pub const CMD_DATABASE: &str = "database";
 
 pub fn get_args() -> Command {
     Command::new(PKG_NAME)
@@ -70,6 +71,11 @@ pub fn get_args() -> Command {
                 .subcommand(Command::new("today"))
                 .subcommand(Command::new("upcoming").alias("future"))
                 .subcommand_required(false),
+        )
+        .subcommand(
+            Command::new(CMD_DATABASE)
+                .alias("db")
+                .about("Find the location of the tdo database."),
         )
 }
 

@@ -1,8 +1,8 @@
 use crate::types::Output;
 
 use self::{
-    actions::{add, edit, list, mark, remove},
-    utils::{get_args, CMD_ADD, CMD_EDIT, CMD_LIST, CMD_MARK, CMD_REMOVE},
+    actions::{add, database, edit, list, mark, remove},
+    utils::{get_args, CMD_ADD, CMD_DATABASE, CMD_EDIT, CMD_LIST, CMD_MARK, CMD_REMOVE},
 };
 
 mod actions;
@@ -15,6 +15,7 @@ pub fn run() -> Output {
         Some((CMD_EDIT, arg)) => Output::Edit(edit(arg)),
         Some((CMD_MARK, arg)) => Output::Edit(mark(arg)),
         Some((CMD_LIST, arg)) => Output::List(list(arg)),
+        Some((CMD_DATABASE, _)) => Output::Database(database()),
         None | Some((_, _)) => Output::Unactionable,
     }
 }

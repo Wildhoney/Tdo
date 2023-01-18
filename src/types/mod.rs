@@ -5,12 +5,15 @@ use self::utils::parse_date_from_row;
 
 mod utils;
 
+pub const DB_PATH: &str = "tdo.db";
+
 #[derive(Debug, PartialEq)]
 pub enum Output {
     Add(Option<Task>),
     Remove(Option<Task>),
     Edit(Option<Task>),
     List(Option<Vec<Task>>),
+    Database(String),
     Unactionable,
 }
 
@@ -70,7 +73,7 @@ pub struct DbMemory {}
 
 impl DbFile {
     pub fn new() -> Option<Connection> {
-        Some(Connection::open("tdo.db").ok()?)
+        Some(Connection::open(DB_PATH).ok()?)
     }
 }
 

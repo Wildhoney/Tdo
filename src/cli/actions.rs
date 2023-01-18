@@ -2,7 +2,7 @@ use clap::ArgMatches;
 
 use crate::{
     db::{add_todo, edit_todo, get_todo, get_todos, remove_todo},
-    types::{DbFile, GetTodos, Task},
+    types::{DbFile, GetTodos, Task, DB_PATH},
 };
 
 use super::utils::parse_date_from_string;
@@ -75,4 +75,8 @@ pub fn list(arg: &ArgMatches) -> Option<Vec<Task>> {
         Some(("upcoming", _)) => get_todos(GetTodos::Upcoming, &db),
         _ => return None,
     })
+}
+
+pub fn database() -> String {
+    DB_PATH.to_string()
 }
