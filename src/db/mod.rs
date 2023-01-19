@@ -74,6 +74,7 @@ pub fn get_todos(when: GetTodos, db: &Connection) -> Option<Vec<Task>> {
                 &"SELECT * FROM tasks
                   WHERE (date_for >= ?1 AND date_for < ?2)
                   OR    (date_for < ?3 AND completed = 0)
+                  OR    (date_modified >= ?1 AND date_modified < ?2)
                   ORDER BY date_for DESC"
                     .to_string(),
                 [start_of_today, beginning_of_tomorrow, beginning_of_today],
