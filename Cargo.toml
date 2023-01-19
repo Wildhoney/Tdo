@@ -9,7 +9,9 @@ edition = "2021"
 chrono = "0.4.23"
 clap = { version = "4.0.29", features = ["derive"] }
 colored = "2.0.0"
+dirs = "4.0.0"
 figlet-rs = "0.1.4"
+lazy_static = "1.4.0"
 rusqlite = { version = "0.28.0", features = ["bundled"] }
 
 [dev-dependencies]
