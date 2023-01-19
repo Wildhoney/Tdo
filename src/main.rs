@@ -6,6 +6,7 @@ mod types;
 
 #[macro_use]
 extern crate lazy_static;
+extern crate inflector;
 
 pub fn main() {
     let output = cli::run();
