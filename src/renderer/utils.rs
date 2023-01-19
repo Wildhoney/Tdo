@@ -1,4 +1,4 @@
-use crate::types::Symbols;
+use crate::types::{Symbols, Task};
 
 use chrono::{NaiveDateTime, NaiveTime, Utc};
 use colored::*;
@@ -68,6 +68,19 @@ pub fn get_pluralised(word: &str, count: i64) -> String {
         1 => word.to_string(),
         _ => format!("{}s", word),
     }
+}
+
+pub fn get_length_of_longest_task_id(tasks: &Vec<Task>) -> usize {
+    tasks.iter().fold(0, |current_longest, task| {
+        let id = task.id.unwrap_or(0);
+        let length = id.to_string().len();
+
+        if length > current_longest {
+            length
+        } else {
+            current_longest
+        }
+    })
 }
 
 #[cfg(test)]
@@ -143,5 +156,20 @@ mod tests {
 
         let six_months_ago = Utc::now().naive_utc() - Duration::weeks(26);
         assert_eq!(is_overdue(six_months_ago), true);
+    }
+
+    #[test]
+    fn it_can_get_length_of_longest_task_id() {
+        let mut first_task = Task::new("Adam".to_string(), Some(Utc::now().naive_local()));
+        first_task.id = Some(1);
+
+        let mut second_task = Task::new("Maria".to_string(), Some(Utc::now().naive_local()));
+        second_task.id = Some(1_500);
+
+        let mut third_task = Task::new("Imogen".to_string(), Some(Utc::now().naive_local()));
+        third_task.id = Some(750);
+
+        let tasks = vec![first_task, second_task, third_task];
+        assert_eq!(get_length_of_longest_task_id(&tasks), 4)
     }
 }
