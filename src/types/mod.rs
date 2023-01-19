@@ -73,7 +73,7 @@ pub struct DbMemory {}
 
 impl DbFile {
     pub fn new() -> Option<Connection> {
-        Some(Connection::open(DB_PATH).ok()?)
+        Some(Connection::open(DB_PATH.as_str()).ok()?)
     }
 }
 
