@@ -1,5 +1,8 @@
 use crate::{
-    renderer::utils::{get_elapsed_time, get_percentage_emoji, get_pluralised, is_overdue},
+    renderer::utils::{
+        get_elapsed_time, get_length_of_longest_task_id, get_percentage_emoji, get_pluralised,
+        is_overdue,
+    },
     types::{Output, Symbols, Task},
 };
 use colored::*;
@@ -75,6 +78,7 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
         spacing,
         lightbulb,
     } = get_symbols();
+    let longest_id = get_length_of_longest_task_id(&tasks);
 
     let completed_count = tasks
         .iter()
@@ -103,7 +107,11 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
     );
 
     for task in tasks {
-        let id = format!("{}{dot}", task.id.unwrap_or(0).to_string().dimmed());
+        let id = format!(
+            "{:>width$}{dot}",
+            task.id.unwrap_or(0).to_string().dimmed(),
+            width = longest_id
+        );
         let icon = match task.completed {
             true => tick.clone(),
             false => bullet.clone(),
@@ -127,7 +135,12 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
         if let Some(date_added) = task.date_added {
             print!(
                 "{}",
-                format!("       Added {}", get_elapsed_time(date_added)).dimmed()
+                format!(
+                    "{spacing}{}    Added {}",
+                    " ".repeat(longest_id),
+                    get_elapsed_time(date_added)
+                )
+                .dimmed()
             );
 
             if let Some(date_modified) = task.date_modified {
