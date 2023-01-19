@@ -1,8 +1,11 @@
-use crate::types::Output;
+use crate::{
+    config::{CMD_ADD, CMD_DATABASE, CMD_EDIT, CMD_LIST, CMD_MARK, CMD_REMOVE},
+    types::Output,
+};
 
 use self::{
     actions::{add, database, edit, list, mark, remove},
-    utils::{get_args, CMD_ADD, CMD_DATABASE, CMD_EDIT, CMD_LIST, CMD_MARK, CMD_REMOVE},
+    utils::get_args,
 };
 
 mod actions;

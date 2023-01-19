@@ -1,8 +1,9 @@
 use clap::ArgMatches;
 
 use crate::{
+    config::DB_PATH,
     db::{add_todo, edit_todo, get_todo, get_todos, remove_todo},
-    types::{DbFile, GetTodos, Task, DB_PATH},
+    types::{DbFile, GetTodos, Task},
 };
 
 use super::utils::parse_date_from_string;
@@ -36,15 +37,10 @@ pub fn edit(arg: &ArgMatches) -> Option<Task> {
         .unwrap();
 
     let description = arg.get_one::<String>("description");
-    let completed = match arg.get_one::<String>("completed") {
-        Some(value) => value.parse::<bool>().ok(),
-        _ => None,
-    };
 
     DbFile::new().and_then(|db| {
         let mut task = get_todo(&db, id)?;
         task.description = description.unwrap_or(&task.description).to_owned();
-        task.completed = completed.unwrap_or(task.completed).to_owned();
         edit_todo(&db, task)
     })
 }

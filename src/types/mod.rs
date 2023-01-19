@@ -1,11 +1,11 @@
 use chrono::NaiveDateTime;
 use rusqlite::{Connection, Row};
 
+use crate::config::DB_PATH;
+
 use self::utils::parse_date_from_row;
 
 mod utils;
-
-pub const DB_PATH: &str = "tdo.db";
 
 #[derive(Debug, PartialEq)]
 pub enum Output {

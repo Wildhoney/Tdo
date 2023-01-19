@@ -1,15 +1,9 @@
 use chrono::{Duration, NaiveDateTime, NaiveTime, Utc};
 use clap::{arg, Arg, Command};
 
-const PKG_NAME: &str = env!("CARGO_PKG_NAME");
-const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
-
-pub const CMD_ADD: &str = "add";
-pub const CMD_REMOVE: &str = "remove";
-pub const CMD_EDIT: &str = "edit";
-pub const CMD_LIST: &str = "list";
-pub const CMD_MARK: &str = "mark";
-pub const CMD_DATABASE: &str = "database";
+use crate::config::{
+    CMD_ADD, CMD_DATABASE, CMD_EDIT, CMD_LIST, CMD_MARK, CMD_REMOVE, PKG_NAME, PKG_VERSION,
+};
 
 pub fn get_args() -> Command {
     Command::new(PKG_NAME)
@@ -41,19 +35,8 @@ pub fn get_args() -> Command {
                 .alias("update")
                 .alias("change")
                 .arg(arg!(<id> "ID of the task to edit."))
-                .arg_required_else_help(true)
-                .arg(
-                    Arg::new("description")
-                        .short('d')
-                        .long("description")
-                        .required(false),
-                )
-                .arg(
-                    Arg::new("completed")
-                        .short('c')
-                        .long("completed")
-                        .required(false),
-                ),
+                .arg(arg!(<description> "Updated description for the task."))
+                .arg_required_else_help(true),
         )
         .subcommand(
             Command::new(CMD_MARK)
@@ -61,8 +44,8 @@ pub fn get_args() -> Command {
                 .alias("set")
                 .arg(arg!(<id> "ID of the task that you've completed"))
                 .arg_required_else_help(true)
-                .subcommand(Command::new("complete").alias("done"))
-                .subcommand(Command::new("incomplete").alias("not-done")),
+                .subcommand(Command::new("complete").alias("done").alias("c"))
+                .subcommand(Command::new("incomplete").alias("todo").alias("i")),
         )
         .subcommand(
             Command::new(CMD_LIST)

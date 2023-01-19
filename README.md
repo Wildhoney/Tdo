@@ -32,10 +32,10 @@ We've just realised that we don't need the `Porthos` task any more, so we can go
 foo@bar:~$ tdo rm 2
 ```
 
-We've also realised we prefer the fourth Muskateer so we'll replace `Athos` with `D'Artagnan` (we can also use the shorthand `-d`):
+We've also realised we prefer the fourth Muskateer so we'll replace `Athos` with `D'Artagnan`:
 
 ```console
-foo@bar:~$ tdo edit 1 --description "D'Artagnan"
+foo@bar:~$ tdo edit 1 "D'Artagnan"
 ```
 
 And as we're exceptional at what we do, we'll mark `D'Artagnan` as completed which we can later validate with the aforementioned `ls` command (in the unlikely event we've made a mistake we can revert that with the `mark <id> incomplete` command):
