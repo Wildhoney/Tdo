@@ -1,5 +1,5 @@
 use chrono::{Duration, NaiveDateTime, NaiveTime, Utc};
-use clap::{arg, Arg, Command};
+use clap::{arg, Arg, ArgMatches, Command};
 
 use crate::config::{
     CMD_ADD, CMD_DATABASE, CMD_EDIT, CMD_LIST, CMD_MARK, CMD_REMOVE, PKG_NAME, PKG_VERSION,
@@ -81,4 +81,8 @@ pub fn parse_date_from_string(date: Option<&String>) -> Option<NaiveDateTime> {
     }
 
     None
+}
+
+pub fn get_id_from_args(arg: &ArgMatches) -> Option<usize> {
+    arg.get_one::<String>("id").unwrap().parse::<usize>().ok()
 }
