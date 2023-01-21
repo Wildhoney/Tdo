@@ -7,13 +7,15 @@ use self::utils::parse_date_from_row;
 
 mod utils;
 
-#[derive(Debug, PartialEq)]
+pub type GetTodos = Box<dyn Fn() -> Option<Vec<Task>>>;
+
 pub enum Output {
     Add(Option<Task>),
     Remove(Option<Task>),
     Edit(Option<Task>),
     List(Option<Vec<Task>>),
     Database(String),
+    Watch(GetTodos),
     Unactionable,
 }
 
@@ -85,7 +87,7 @@ impl DbMemory {
 }
 
 #[derive(Debug)]
-pub enum GetTodos {
+pub enum TodosFor {
     Today,
     Upcoming,
 }

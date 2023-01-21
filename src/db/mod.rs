@@ -3,7 +3,7 @@ use rusqlite::Connection;
 
 mod utils;
 
-use crate::types::{GetTodos, Task};
+use crate::types::{Task, TodosFor};
 
 use self::utils::{get_db_connection, prepare_todos};
 
@@ -48,11 +48,11 @@ pub fn edit_todo(db: &Connection, task: Task) -> Option<Task> {
     Some(task)
 }
 
-pub fn get_todos(when: GetTodos, db: &Connection) -> Option<Vec<Task>> {
+pub fn get_todos(when: TodosFor, db: &Connection) -> Option<Vec<Task>> {
     let time = NaiveTime::from_hms_milli_opt(0, 0, 0, 0).unwrap();
 
     match when {
-        GetTodos::Upcoming => {
+        TodosFor::Upcoming => {
             let beginning_of_tomorrow =
                 NaiveDateTime::new(Utc::now().date_naive() + Duration::days(1), time).to_string();
 
@@ -62,7 +62,7 @@ pub fn get_todos(when: GetTodos, db: &Connection) -> Option<Vec<Task>> {
                 [beginning_of_tomorrow],
             )
         }
-        GetTodos::Today => {
+        TodosFor::Today => {
             let start_of_today = NaiveDateTime::new(Utc::now().date_naive(), time).to_string();
             let beginning_of_today =
                 NaiveDateTime::new(Utc::now().date_naive() + Duration::days(1), time).to_string();
@@ -95,7 +95,7 @@ pub fn get_todo(db: &Connection, id: usize) -> Option<Task> {
 mod tests {
     use crate::{
         db::{add_todo, edit_todo, get_todos, remove_todo},
-        types::{DbMemory, GetTodos, Task},
+        types::{DbMemory, Task, TodosFor},
     };
 
     #[test]
@@ -105,7 +105,7 @@ mod tests {
         let task_from_add = add_todo(&db, Task::new("I am Imogen!".to_string(), None));
         assert!(task_from_add.is_some());
 
-        let tasks_from_today = get_todos(GetTodos::Today, &db);
+        let tasks_from_today = get_todos(TodosFor::Today, &db);
         assert!(tasks_from_today.is_some());
         assert_eq!(tasks_from_today.unwrap().len(), 1);
 
