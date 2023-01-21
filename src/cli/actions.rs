@@ -3,7 +3,7 @@ use clap::ArgMatches;
 use crate::{
     config::DB_PATH,
     db::{add_todo, edit_todo, get_todo, get_todos, remove_todo},
-    types::{DbFile, GetTodos, Task},
+    types::{DbFile, Task, TodosFor},
 };
 
 use super::utils::{get_id_from_args, parse_date_from_string};
@@ -54,10 +54,14 @@ pub fn mark(arg: &ArgMatches) -> Option<Task> {
 
 pub fn list(arg: &ArgMatches) -> Option<Vec<Task>> {
     DbFile::new().and_then(|db| match arg.subcommand() {
-        Some(("today", _)) | None => get_todos(GetTodos::Today, &db),
-        Some(("upcoming", _)) => get_todos(GetTodos::Upcoming, &db),
+        Some(("today", _)) | None => get_todos(TodosFor::Today, &db),
+        Some(("upcoming", _)) => get_todos(TodosFor::Upcoming, &db),
         _ => return None,
     })
+}
+
+pub fn watch() -> Option<Vec<Task>> {
+    DbFile::new().and_then(|db| get_todos(TodosFor::Today, &db))
 }
 
 pub fn database() -> String {

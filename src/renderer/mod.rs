@@ -1,12 +1,19 @@
+use std::{thread, time::Duration};
+
 use crate::{
+    config::PKG_NAME,
     renderer::utils::{
         get_elapsed_time, get_length_of_longest_task_id, get_percentage_emoji, get_pluralised,
         is_overdue,
     },
-    types::{Output, Symbols, Task},
+    types::{GetTodos, Output, Symbols, Task},
 };
 use colored::*;
 use figlet_rs::FIGfont;
+use inflector::Inflector;
+use mac_notification_sys::{
+    get_bundle_identifier_or_default, send_notification, set_application, Notification,
+};
 
 use self::utils::get_symbols;
 
@@ -21,6 +28,7 @@ pub fn print(output: Output) {
         Output::Edit(Some(task)) => put_task_edit(task),
         Output::List(Some(tasks)) => put_tasks_list(tasks),
         Output::Database(db_path) => put_database(db_path),
+        Output::Watch(get_tasks) => put_watch(get_tasks),
         _ => println!("There appears to be a problem."),
     }
 
@@ -168,4 +176,43 @@ fn put_database(path: String) {
         "{spacing} {lightbulb} {}",
         "You could open the SQLite DB file in an application such as TablePlus!".dimmed()
     )
+}
+
+fn put_watch(get_todos: GetTodos) {
+    let Symbols {
+        spacing, lightbulb, ..
+    } = get_symbols();
+
+    println!(
+        "{spacing} {lightbulb} {}",
+        "We will send notifications to remind you when todos need to be done.".dimmed()
+    );
+
+    let app_name = PKG_NAME.to_title_case();
+    let delay = Duration::from_secs(10_800);
+    let bundle = get_bundle_identifier_or_default(PKG_NAME);
+    set_application(&bundle).unwrap();
+
+    loop {
+        thread::sleep(delay);
+
+        let todo_count = get_todos()
+            .unwrap_or(vec![])
+            .iter()
+            .filter(|task| task.completed == false)
+            .collect::<Vec<_>>()
+            .len();
+
+        send_notification(
+            &app_name.to_string(),
+            None,
+            &format!(
+                "You have {} {} to complete!",
+                get_pluralised("task", todo_count as i64),
+                todo_count
+            ),
+            Some(Notification::new().sound("Submarine")),
+        )
+        .unwrap();
+    }
 }
