@@ -6,7 +6,7 @@ use crate::{
     types::{DbFile, GetTodos, Task},
 };
 
-use super::utils::parse_date_from_string;
+use super::utils::{get_id_from_args, parse_date_from_string};
 
 pub fn add(arg: &ArgMatches) -> Option<Task> {
     let description = arg.get_one::<String>("description").unwrap();
@@ -17,11 +17,7 @@ pub fn add(arg: &ArgMatches) -> Option<Task> {
 }
 
 pub fn remove(arg: &ArgMatches) -> Option<Task> {
-    let id = arg
-        .get_one::<String>("id")
-        .unwrap()
-        .parse::<usize>()
-        .unwrap();
+    let id = get_id_from_args(arg)?;
 
     DbFile::new().and_then(|db| {
         let task = get_todo(&db, id)?;
@@ -30,12 +26,7 @@ pub fn remove(arg: &ArgMatches) -> Option<Task> {
 }
 
 pub fn edit(arg: &ArgMatches) -> Option<Task> {
-    let id = arg
-        .get_one::<String>("id")
-        .unwrap()
-        .parse::<usize>()
-        .unwrap();
-
+    let id = get_id_from_args(arg)?;
     let description = arg.get_one::<String>("description");
 
     DbFile::new().and_then(|db| {
@@ -46,11 +37,7 @@ pub fn edit(arg: &ArgMatches) -> Option<Task> {
 }
 
 pub fn mark(arg: &ArgMatches) -> Option<Task> {
-    let id = arg
-        .get_one::<String>("id")
-        .unwrap()
-        .parse::<usize>()
-        .unwrap();
+    let id = get_id_from_args(arg)?;
 
     DbFile::new().and_then(|db| {
         let mut task = get_todo(&db, id)?;
