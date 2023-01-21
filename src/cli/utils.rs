@@ -86,3 +86,19 @@ pub fn parse_date_from_string(date: Option<&String>) -> Option<NaiveDateTime> {
 pub fn get_id_from_args(arg: &ArgMatches) -> Option<usize> {
     arg.get_one::<String>("id").unwrap().parse::<usize>().ok()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::parse_date_from_string;
+
+    #[test]
+    fn it_can_parse_date_from_string() {
+        assert!(parse_date_from_string(None).is_none());
+
+        let today = "today".to_string();
+        assert!(parse_date_from_string(Some(&today)).is_some());
+
+        let tomorrow = "tomorrow".to_string();
+        assert!(parse_date_from_string(Some(&tomorrow)).is_some());
+    }
+}
