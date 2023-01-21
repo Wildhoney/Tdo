@@ -12,7 +12,7 @@ use self::utils::get_symbols;
 
 mod utils;
 
-pub fn print(output: Output) -> () {
+pub fn print(output: Output) {
     put_header();
 
     match output {
@@ -27,17 +27,17 @@ pub fn print(output: Output) -> () {
     put_footer();
 }
 
-fn put_header() -> () {
+fn put_header() {
     let font = FIGfont::standard().unwrap();
     let logo = font.convert("Tdo.").unwrap();
     println!("{}", logo);
 }
 
-fn put_footer() -> () {
+fn put_footer() {
     print!("\n");
 }
 
-fn put_add_task(task: Task) -> () {
+fn put_add_task(task: Task) {
     let Symbols {
         bullet, spacing, ..
     } = get_symbols();
@@ -48,7 +48,7 @@ fn put_add_task(task: Task) -> () {
     );
 }
 
-fn put_task_remove(task: Task) -> () {
+fn put_task_remove(task: Task) {
     let Symbols {
         bullet, spacing, ..
     } = get_symbols();
@@ -59,7 +59,7 @@ fn put_task_remove(task: Task) -> () {
     );
 }
 
-fn put_task_edit(task: Task) -> () {
+fn put_task_edit(task: Task) {
     let Symbols {
         bullet, spacing, ..
     } = get_symbols();
@@ -70,7 +70,7 @@ fn put_task_edit(task: Task) -> () {
     );
 }
 
-fn put_tasks_list(tasks: Vec<Task>) -> () {
+fn put_tasks_list(tasks: Vec<Task>) {
     let Symbols {
         dot,
         bullet,
@@ -157,7 +157,7 @@ fn put_tasks_list(tasks: Vec<Task>) -> () {
     }
 }
 
-fn put_database(path: String) -> () {
+fn put_database(path: String) {
     let Symbols {
         spacing, lightbulb, ..
     } = get_symbols();
