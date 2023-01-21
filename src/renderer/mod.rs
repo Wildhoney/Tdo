@@ -203,16 +203,18 @@ fn put_watch(get_todos: GetTodos) {
             .collect::<Vec<_>>()
             .len();
 
-        send_notification(
-            &app_name.to_string(),
-            None,
-            &format!(
-                "You have {} {} to complete!",
-                get_pluralised("task", todo_count as i64),
-                todo_count
-            ),
-            Some(Notification::new().sound("Submarine")),
-        )
-        .unwrap();
+        if todo_count > 0 {
+            send_notification(
+                &app_name.to_string(),
+                None,
+                &format!(
+                    "You have {} {} to complete!",
+                    get_pluralised("task", todo_count as i64),
+                    todo_count
+                ),
+                Some(Notification::new().sound("Submarine")),
+            )
+            .unwrap();
+        }
     }
 }

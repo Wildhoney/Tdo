@@ -18,7 +18,7 @@ pub fn run() -> Output {
         Some((CMD_EDIT, arg)) => Output::Edit(edit(arg)),
         Some((CMD_MARK, arg)) => Output::Edit(mark(arg)),
         Some((CMD_LIST, arg)) => Output::List(list(arg)),
-        Some((CMD_WATCH, _)) => Output::Watch(Box::new(|| watch())),
+        Some((CMD_WATCH, _)) => Output::Watch(Box::new(watch)),
         Some((CMD_DATABASE, _)) => Output::Database(database()),
         None | Some((_, _)) => Output::Unactionable,
     }
