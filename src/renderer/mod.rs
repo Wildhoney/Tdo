@@ -129,12 +129,21 @@ fn put_tasks_list(tasks: Vec<Task>) {
 
         if let Some(date_for) = task.date_for {
             if is_overdue(date_for) {
-                print!(
-                    " {}",
-                    format!(" {}{} ", "overdue: ", get_elapsed_time(date_for))
-                        .on_bright_red()
-                        .black()
-                );
+                if task.completed {
+                    print!(
+                        " {}",
+                        format!(" {}{} ", "overdue: ", get_elapsed_time(date_for))
+                            .on_green()
+                            .black()
+                    );
+                } else {
+                    print!(
+                        " {}",
+                        format!(" {}{} ", "overdue: ", get_elapsed_time(date_for))
+                            .on_bright_red()
+                            .black()
+                    );
+                }
             }
         }
 
