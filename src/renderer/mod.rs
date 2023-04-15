@@ -4,7 +4,7 @@ use crate::{
     config::PKG_NAME,
     renderer::utils::{
         get_elapsed_time, get_length_of_longest_task_id, get_percentage_emoji, get_pluralised,
-        is_overdue,
+        print_overdue,
     },
     types::{GetTodos, Output, Symbols, Task},
 };
@@ -27,6 +27,7 @@ pub fn print(output: Output) {
         Output::Remove(Some(task)) => put_task_remove(task),
         Output::Edit(Some(task)) => put_task_edit(task),
         Output::List(Some(tasks)) => put_tasks_list(tasks),
+        Output::RandomTask(Some(task)) => put_random_task(task),
         Output::Database(db_path) => put_database(db_path),
         Output::Watch(get_tasks) => put_watch(get_tasks),
         _ => println!("There appears to be a problem."),
@@ -126,27 +127,7 @@ fn put_tasks_list(tasks: Vec<Task>) {
         };
 
         print!("{spacing}{icon} {id} {}", task.description);
-
-        if let Some(date_for) = task.date_for {
-            if is_overdue(date_for) {
-                if task.completed {
-                    print!(
-                        " {}",
-                        format!(" {}{} ", "overdue: ", get_elapsed_time(date_for))
-                            .on_green()
-                            .black()
-                    );
-                } else {
-                    print!(
-                        " {}",
-                        format!(" {}{} ", "overdue: ", get_elapsed_time(date_for))
-                            .on_bright_red()
-                            .black()
-                    );
-                }
-            }
-        }
-
+        print_overdue(&task);
         print!("\n");
 
         if let Some(date_added) = task.date_added {
@@ -226,4 +207,17 @@ fn put_watch(get_todos: GetTodos) {
             .unwrap();
         }
     }
+}
+
+fn put_random_task(task: Task) {
+    let Symbols {
+        bullet, spacing, ..
+    } = get_symbols();
+    print!(
+        "{spacing}{} {}",
+        format!("{bullet} Complete this randomly assigned task:").dimmed(),
+        task.description
+    );
+    print_overdue(&task);
+    println!("\n");
 }

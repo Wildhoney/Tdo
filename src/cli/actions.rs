@@ -2,7 +2,7 @@ use clap::ArgMatches;
 
 use crate::{
     config::DB_PATH,
-    db::{add_todo, edit_todo, get_todo, get_todos, remove_todo},
+    db::{add_todo, edit_todo, get_random_todo, get_todo, get_todos, remove_todo},
     types::{DbFile, Task, TodosFor},
 };
 
@@ -66,4 +66,8 @@ pub fn watch() -> Option<Vec<Task>> {
 
 pub fn database() -> String {
     DB_PATH.to_string()
+}
+
+pub fn random_task() -> Option<Task> {
+    DbFile::new().and_then(|db| get_random_todo(&db))
 }
