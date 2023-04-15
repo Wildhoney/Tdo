@@ -96,7 +96,12 @@ pub fn get_random_todo(db: &Connection) -> Option<Task> {
     let todos = get_todos(TodosFor::Today, db);
 
     match todos {
-        Some(todos) => todos.choose(&mut rand::thread_rng()).cloned(),
+        Some(todos) => todos
+            .into_iter()
+            .filter(|t| !t.completed)
+            .collect::<Vec<_>>()
+            .choose(&mut rand::thread_rng())
+            .cloned(),
         None => None,
     }
 }
