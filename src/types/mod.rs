@@ -14,6 +14,7 @@ pub enum Output {
     Remove(Option<Task>),
     Edit(Option<Task>),
     List(Option<Vec<Task>>),
+    RandomTask(Option<Task>),
     Database(String),
     Watch(GetTodos),
     Unactionable,

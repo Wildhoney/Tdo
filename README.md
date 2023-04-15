@@ -43,3 +43,9 @@ And as we're exceptional at what we do, we'll mark `D'Artagnan` as completed whi
 ```console
 foo@bar:~$ tdo mark 1 complete
 ```
+
+Sometimes it's nice to be randomly assigned a task so you don't always pick the most favourable ones &ndash; for this use the `task` command a randomly picked task will be assigned to you.
+
+```console
+foo@bar:~$ tdo task
+```

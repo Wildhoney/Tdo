@@ -1,4 +1,5 @@
 use chrono::{Duration, NaiveDateTime, NaiveTime, Utc};
+use rand::seq::SliceRandom;
 use rusqlite::Connection;
 
 mod utils;
@@ -89,6 +90,15 @@ pub fn get_todo(db: &Connection, id: usize) -> Option<Task> {
     statement
         .query_row([id], |row| Ok(Task::from_db(row)))
         .ok()?
+}
+
+pub fn get_random_todo(db: &Connection) -> Option<Task> {
+    let todos = get_todos(TodosFor::Today, db);
+
+    match todos {
+        Some(todos) => todos.choose(&mut rand::thread_rng()).cloned(),
+        None => None,
+    }
 }
 
 #[cfg(test)]

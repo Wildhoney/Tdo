@@ -83,6 +83,28 @@ pub fn get_length_of_longest_task_id(tasks: &Vec<Task>) -> usize {
     })
 }
 
+pub fn print_overdue(task: &Task) {
+    if let Some(date_for) = task.date_for {
+        if is_overdue(date_for) {
+            if task.completed {
+                print!(
+                    " {}",
+                    format!(" {}{} ", "overdue: ", get_elapsed_time(date_for))
+                        .on_green()
+                        .black()
+                );
+            } else {
+                print!(
+                    " {}",
+                    format!(" {}{} ", "overdue: ", get_elapsed_time(date_for))
+                        .on_bright_red()
+                        .black()
+                );
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

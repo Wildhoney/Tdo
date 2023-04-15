@@ -12,6 +12,7 @@ pub const CMD_LIST: &str = "list";
 pub const CMD_MARK: &str = "mark";
 pub const CMD_DATABASE: &str = "database";
 pub const CMD_WATCH: &str = "watch";
+pub const CMD_RANDOM_TASK: &str = "task";
 
 lazy_static! {
     pub static ref DB_PATH: String = {
