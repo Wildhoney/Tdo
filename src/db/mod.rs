@@ -109,7 +109,7 @@ pub fn get_random_todo(db: &Connection) -> Option<Task> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        db::{add_todo, edit_todo, get_todos, remove_todo},
+        db::{add_todo, edit_todo, get_random_todo, get_todos, remove_todo},
         types::{DbMemory, Task, TodosFor},
     };
 
@@ -132,5 +132,21 @@ mod tests {
 
         let remove = remove_todo(&db, task_from_add.unwrap());
         assert!(remove.is_some());
+    }
+
+    #[test]
+    fn it_can_randomly_find_tasks() {
+        let db = DbMemory::new().unwrap();
+
+        let random_task = get_random_todo(&db);
+        assert_eq!(random_task.is_none(), true);
+
+        add_todo(&db, Task::new("Buy a cup!".to_string(), None));
+        add_todo(&db, Task::new("Buy a plate!".to_string(), None));
+        add_todo(&db, Task::new("Buy a spoon!".to_string(), None));
+
+        let random_task = get_random_todo(&db);
+        assert_eq!(random_task.is_some(), true);
+        assert_eq!(random_task.unwrap().completed, false);
     }
 }
