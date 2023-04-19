@@ -44,8 +44,20 @@ pub fn get_args() -> Command {
                 .alias("set")
                 .arg(arg!(<id> "ID of the task that you've completed"))
                 .arg_required_else_help(true)
-                .subcommand(Command::new("complete").alias("done").alias("c"))
-                .subcommand(Command::new("incomplete").alias("todo").alias("i")),
+                .subcommand(
+                    Command::new("complete")
+                        .alias("done")
+                        .alias("c")
+                        .alias("redo")
+                        .alias("yes"),
+                )
+                .subcommand(
+                    Command::new("incomplete")
+                        .alias("todo")
+                        .alias("i")
+                        .alias("undo")
+                        .alias("no"),
+                ),
         )
         .subcommand(
             Command::new(CMD_LIST)
