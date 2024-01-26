@@ -2,6 +2,8 @@
 
 > Terminal based todo app for managing today's tasks with gentle reminders.
 
+![Status](https://github.com/Wildhoney/Tdo/actions/workflows/rust.yml/badge.svg)
+
 ![Screenshot](media/screenshot.png)
 
 ## Commands
