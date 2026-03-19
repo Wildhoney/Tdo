@@ -11,6 +11,7 @@ use crate::{
 use colored::*;
 use figlet_rs::FIGfont;
 use inflector::Inflector;
+#[cfg(target_os = "macos")]
 use mac_notification_sys::{
     get_bundle_identifier_or_default, send_notification, set_application, Notification,
 };
@@ -168,6 +169,7 @@ fn put_database(path: String) {
     )
 }
 
+#[cfg(target_os = "macos")]
 fn put_watch(get_todos: GetTodos) {
     let Symbols {
         spacing, lightbulb, ..
@@ -205,6 +207,39 @@ fn put_watch(get_todos: GetTodos) {
                 Some(Notification::new().sound("Submarine")),
             )
             .unwrap();
+        }
+    }
+}
+
+#[cfg(not(target_os = "macos"))]
+fn put_watch(get_todos: GetTodos) {
+    let Symbols {
+        spacing, lightbulb, ..
+    } = get_symbols();
+
+    println!(
+        "{spacing} {lightbulb} {}",
+        "We will print reminders to the terminal when todos need to be done.".dimmed()
+    );
+
+    let delay = Duration::from_secs(10_800);
+
+    loop {
+        thread::sleep(delay);
+
+        let todo_count = get_todos()
+            .unwrap_or(vec![])
+            .iter()
+            .filter(|task| task.completed == false)
+            .collect::<Vec<_>>()
+            .len();
+
+        if todo_count > 0 {
+            println!(
+                "You have {} {} to complete!",
+                get_pluralised("task", todo_count as i64),
+                todo_count
+            );
         }
     }
 }
