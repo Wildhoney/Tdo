@@ -2,8 +2,10 @@
 name = "tdo"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "Terminal based todo app for managing today's tasks with gentle reminders"
+license = "MIT"
+repository = "https://github.com/Wildhoney/Tdo"
+homepage = "https://github.com/Wildhoney/Tdo"
 
 [dependencies]
 Inflector = "0.11.4"
@@ -14,8 +16,10 @@ dirs = "4.0.0"
 figlet-rs = "0.1.4"
 lazy_static = "1.4.0"
 rusqlite = { version = "0.28.0", features = ["bundled"] }
+rand = "0.8.4"
+
+[target.'cfg(target_os = "macos")'.dependencies]
 mac-notification-sys = "0.5"
-rand="0.8.4"
 
 [dev-dependencies]
 rusty-hook = "^0.11.2"

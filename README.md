@@ -6,6 +6,38 @@
 
 ![Screenshot](media/screenshot.png)
 
+## Installation
+
+### Homebrew (macOS & Linux)
+
+```console
+foo@bar:~$ brew tap Wildhoney/Tdo https://github.com/Wildhoney/Tdo
+foo@bar:~$ brew install tdo
+```
+
+### GitHub Releases
+
+Pre-built binaries are available for each [release](https://github.com/Wildhoney/Tdo/releases) across the following architectures:
+
+| Platform | Architecture | Binary |
+| --- | --- | --- |
+| macOS | Apple Silicon (arm64) | `tdo-aarch64-apple-darwin.tar.gz` |
+| macOS | Intel (x86_64) | `tdo-x86_64-apple-darwin.tar.gz` |
+| Linux | x86_64 | `tdo-x86_64-unknown-linux-gnu.tar.gz` |
+
+Download and extract:
+
+```console
+foo@bar:~$ curl -L https://github.com/Wildhoney/Tdo/releases/latest/download/tdo-aarch64-apple-darwin.tar.gz | tar xz
+foo@bar:~$ sudo mv tdo /usr/local/bin/
+```
+
+### Cargo (build from source)
+
+```console
+foo@bar:~$ cargo install --git https://github.com/Wildhoney/Tdo.git
+```
+
 ## Commands
 
 We will first add three tasks &ndash; two for today and one for tomorrow:

@@ -1,0 +1,44 @@
+name: Update Homebrew Formula
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  update-formula:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Download checksums
+        run: |
+          gh release download "$GITHUB_REF_NAME" --pattern "checksums.txt"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update formula
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          SHA256_ARM=$(grep "aarch64-apple-darwin" checksums.txt | awk '{print $1}')
+          SHA256_X86=$(grep "x86_64-apple-darwin" checksums.txt | awk '{print $1}')
+          SHA256_LINUX=$(grep "x86_64-unknown-linux-gnu" checksums.txt | awk '{print $1}')
+
+          sed -i "s/\${VERSION}/$VERSION/g" Formula/tdo.rb
+          sed -i "s/\${SHA256_ARM}/$SHA256_ARM/g" Formula/tdo.rb
+          sed -i "s/\${SHA256_X86}/$SHA256_X86/g" Formula/tdo.rb
+          sed -i "s/\${SHA256_LINUX}/$SHA256_LINUX/g" Formula/tdo.rb
+
+      - name: Commit updated formula
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/tdo.rb
+          git commit -m "chore: update homebrew formula for ${{ github.ref_name }}"
+          git push
