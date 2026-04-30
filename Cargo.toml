@@ -1,6 +1,6 @@
 [package]
 name = "tdo"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Terminal based todo app for managing today's tasks with gentle reminders"
 license = "MIT"
