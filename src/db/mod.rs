@@ -227,10 +227,16 @@ mod tests {
         let mut task = add_todo(&db, Task::new("Cycle me".to_string(), None)).unwrap();
 
         task.status = TaskStatus::InProgress;
-        assert_eq!(edit_todo(&db, task.clone()).unwrap().status, TaskStatus::InProgress);
+        assert_eq!(
+            edit_todo(&db, task.clone()).unwrap().status,
+            TaskStatus::InProgress
+        );
 
         task.status = TaskStatus::Done;
-        assert_eq!(edit_todo(&db, task.clone()).unwrap().status, TaskStatus::Done);
+        assert_eq!(
+            edit_todo(&db, task.clone()).unwrap().status,
+            TaskStatus::Done
+        );
 
         task.status = TaskStatus::Todo;
         assert_eq!(edit_todo(&db, task).unwrap().status, TaskStatus::Todo);

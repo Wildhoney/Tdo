@@ -21,9 +21,7 @@ pub fn get_db_connection(db: &Connection) -> Option<&Connection> {
     .ok()?;
 
     let _ = db.execute(
-        &format!(
-            "ALTER TABLE tasks ADD COLUMN status TEXT NOT NULL DEFAULT '{default_status}'"
-        ),
+        &format!("ALTER TABLE tasks ADD COLUMN status TEXT NOT NULL DEFAULT '{default_status}'"),
         (),
     );
     let _ = db.execute(

@@ -105,7 +105,10 @@ mod tests {
             .and_hms_opt(14, 30, 0)
             .unwrap();
 
-        assert_eq!(extended_date_for(two_days_ago, now), now + Duration::hours(24));
+        assert_eq!(
+            extended_date_for(two_days_ago, now),
+            now + Duration::hours(24)
+        );
     }
 
     #[test]
