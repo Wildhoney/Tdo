@@ -51,8 +51,14 @@ jobs:
     name: Create Release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -69,3 +75,48 @@ jobs:
           files: |
             tdo-*.tar.gz
             checksums.txt
+
+      - name: Update Homebrew formula
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          SHA256_ARM=$(grep "aarch64-apple-darwin" checksums.txt | awk '{print $1}')
+          SHA256_X86=$(grep "x86_64-apple-darwin" checksums.txt | awk '{print $1}')
+          SHA256_LINUX=$(grep "x86_64-unknown-linux-gnu" checksums.txt | awk '{print $1}')
+
+          cat > Formula/tdo.rb <<EOF
+          class Tdo < Formula
+            desc "Terminal based todo app for managing today's tasks with gentle reminders"
+            homepage "https://github.com/Wildhoney/Tdo"
+            version "$VERSION"
+            license "MIT"
+
+            on_macos do
+              if Hardware::CPU.arm?
+                url "https://github.com/Wildhoney/Tdo/releases/download/v$VERSION/tdo-aarch64-apple-darwin.tar.gz"
+                sha256 "$SHA256_ARM"
+              else
+                url "https://github.com/Wildhoney/Tdo/releases/download/v$VERSION/tdo-x86_64-apple-darwin.tar.gz"
+                sha256 "$SHA256_X86"
+              end
+            end
+
+            on_linux do
+              url "https://github.com/Wildhoney/Tdo/releases/download/v$VERSION/tdo-x86_64-unknown-linux-gnu.tar.gz"
+              sha256 "$SHA256_LINUX"
+            end
+
+            def install
+              bin.install "tdo"
+            end
+
+            test do
+              assert_match "Tdo", shell_output("#{bin}/tdo --help")
+            end
+          end
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/tdo.rb
+          git diff --cached --quiet || git commit -m "chore: update homebrew formula for v$VERSION"
+          git push origin main

@@ -1,22 +1,22 @@
 class Tdo < Formula
   desc "Terminal based todo app for managing today's tasks with gentle reminders"
   homepage "https://github.com/Wildhoney/Tdo"
-  version "0.1.0"
+  version "0.1.1"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/Wildhoney/Tdo/releases/download/v0.1.0/tdo-aarch64-apple-darwin.tar.gz"
-      sha256 "22bc4fcc51547965e69812b2e19ebcd85a2a3a598eb42fd9c422e2797afd1dbe"
+      url "https://github.com/Wildhoney/Tdo/releases/download/v0.1.1/tdo-aarch64-apple-darwin.tar.gz"
+      sha256 "3e2c01374c8064c8d471350b8b49e53ebc076b07d3899d09b87baa448b020280"
     else
-      url "https://github.com/Wildhoney/Tdo/releases/download/v0.1.0/tdo-x86_64-apple-darwin.tar.gz"
-      sha256 "eaddb6738c6a381bab3acdadc780facd6fca381fd0e9e0eb0469effa637dc99a"
+      url "https://github.com/Wildhoney/Tdo/releases/download/v0.1.1/tdo-x86_64-apple-darwin.tar.gz"
+      sha256 "5ccb27eb6f84deee740b620f112318d158f0f05d21ff72514448a5c02e4e60a2"
     end
   end
 
   on_linux do
-    url "https://github.com/Wildhoney/Tdo/releases/download/v0.1.0/tdo-x86_64-unknown-linux-gnu.tar.gz"
-    sha256 "3f4cb057499aa79a068499f0790bf78f274dd021d1ae7b0ca8582cedd9b54969"
+    url "https://github.com/Wildhoney/Tdo/releases/download/v0.1.1/tdo-x86_64-unknown-linux-gnu.tar.gz"
+    sha256 "2b55ed341b4b82eaa3399bb9e7fb698ddb4c8db6fc36ef2efb68413e4e6a215c"
   end
 
   def install
