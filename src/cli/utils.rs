@@ -2,7 +2,8 @@ use chrono::{Duration, NaiveDateTime, NaiveTime, Utc};
 use clap::{arg, Arg, ArgMatches, Command};
 
 use crate::config::{
-    CMD_ADD, CMD_DATABASE, CMD_EDIT, CMD_LIST, CMD_MARK, CMD_REMOVE, PKG_NAME, PKG_VERSION,
+    CMD_ADD, CMD_DATABASE, CMD_EDIT, CMD_EXTEND, CMD_LIST, CMD_MARK, CMD_REMOVE, PKG_NAME,
+    PKG_VERSION,
 };
 
 pub fn get_args() -> Command {
@@ -47,17 +48,60 @@ pub fn get_args() -> Command {
                 .subcommand(
                     Command::new("complete")
                         .alias("done")
+                        .alias("completed")
+                        .alias("finish")
+                        .alias("finished")
+                        .alias("close")
+                        .alias("closed")
                         .alias("c")
+                        .alias("x")
                         .alias("redo")
                         .alias("yes"),
                 )
                 .subcommand(
                     Command::new("incomplete")
                         .alias("todo")
+                        .alias("uncompleted")
+                        .alias("unfinished")
+                        .alias("reopen")
+                        .alias("reopened")
+                        .alias("pending")
+                        .alias("reset")
+                        .alias("open")
                         .alias("i")
+                        .alias("t")
                         .alias("undo")
                         .alias("no"),
+                )
+                .subcommand(
+                    Command::new("in-progress")
+                        .alias("in_progress")
+                        .alias("inprogress")
+                        .alias("progress")
+                        .alias("wip")
+                        .alias("doing")
+                        .alias("started")
+                        .alias("start")
+                        .alias("starting")
+                        .alias("working")
+                        .alias("ongoing")
+                        .alias("active")
+                        .alias("ip")
+                        .alias("p"),
                 ),
+        )
+        .subcommand(
+            Command::new(CMD_EXTEND)
+                .about("Push a task's due date forward by another 24 hours.")
+                .alias("ext")
+                .alias("defer")
+                .alias("postpone")
+                .alias("snooze")
+                .alias("delay")
+                .alias("push")
+                .alias("bump")
+                .arg(arg!(<id> "ID of the task to extend."))
+                .arg_required_else_help(true),
         )
         .subcommand(
             Command::new(CMD_LIST)

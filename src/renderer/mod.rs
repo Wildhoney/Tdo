@@ -6,7 +6,7 @@ use crate::{
         get_elapsed_time, get_length_of_longest_task_id, get_percentage_emoji, get_pluralised,
         print_overdue,
     },
-    types::{GetTodos, Output, Symbols, Task},
+    types::{GetTodos, Output, Symbols, Task, TaskStatus},
 };
 use colored::*;
 use figlet_rs::FIGfont;
@@ -85,14 +85,15 @@ fn put_tasks_list(tasks: Vec<Task>) {
         dot,
         bullet,
         tick,
+        in_progress,
         spacing,
         lightbulb,
     } = get_symbols();
     let longest_id = get_length_of_longest_task_id(&tasks);
 
-    let completed_count = tasks
-        .iter()
-        .fold(0, |count, task| count + (task.completed as usize));
+    let completed_count = tasks.iter().fold(0, |count, task| {
+        count + ((task.status == TaskStatus::Done) as usize)
+    });
     let completed_percentage = (completed_count as f64 / tasks.len() as f64) * 100.0;
 
     if tasks.len() == 0 {
@@ -122,9 +123,10 @@ fn put_tasks_list(tasks: Vec<Task>) {
             task.id.unwrap_or(0).to_string().dimmed(),
             width = longest_id
         );
-        let icon = match task.completed {
-            true => tick.clone(),
-            false => bullet.clone(),
+        let icon = match task.status {
+            TaskStatus::Done => tick.clone(),
+            TaskStatus::InProgress => in_progress.clone(),
+            TaskStatus::Todo => bullet.clone(),
         };
 
         print!("{spacing}{icon} {id} {}", task.description);
@@ -191,7 +193,7 @@ fn put_watch(get_todos: GetTodos) {
         let todo_count = get_todos()
             .unwrap_or(vec![])
             .iter()
-            .filter(|task| task.completed == false)
+            .filter(|task| task.status != TaskStatus::Done)
             .collect::<Vec<_>>()
             .len();
 
@@ -230,7 +232,7 @@ fn put_watch(get_todos: GetTodos) {
         let todo_count = get_todos()
             .unwrap_or(vec![])
             .iter()
-            .filter(|task| task.completed == false)
+            .filter(|task| task.status != TaskStatus::Done)
             .collect::<Vec<_>>()
             .len();
 

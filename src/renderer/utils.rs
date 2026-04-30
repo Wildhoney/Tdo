@@ -1,4 +1,4 @@
-use crate::types::{Symbols, Task};
+use crate::types::{Symbols, Task, TaskStatus};
 
 use chrono::{NaiveDateTime, NaiveTime, Utc};
 use colored::*;
@@ -8,6 +8,7 @@ pub fn get_symbols() -> Symbols {
         dot: ".".dimmed().to_string(),
         bullet: "◦".dimmed().to_string(),
         tick: "✓".bright_green().to_string(),
+        in_progress: "\x1b[1;5;38;5;208m●\x1b[0m".to_string(),
         spacing: "  ".to_string(),
         lightbulb: "💡".to_string(),
     }
@@ -86,7 +87,7 @@ pub fn get_length_of_longest_task_id(tasks: &Vec<Task>) -> usize {
 pub fn print_overdue(task: &Task) {
     if let Some(date_for) = task.date_for {
         if is_overdue(date_for) {
-            if task.completed {
+            if task.status == TaskStatus::Done {
                 print!(
                     " {}",
                     format!(" {}{} ", "overdue: ", get_elapsed_time(date_for))
